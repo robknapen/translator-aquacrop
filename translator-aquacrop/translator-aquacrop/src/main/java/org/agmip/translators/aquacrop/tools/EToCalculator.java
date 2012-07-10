@@ -26,7 +26,7 @@ public class EToCalculator {
 		
 		double ra = calculateExtraTerrestrialRadiation(day, latDeg);
 		System.out.println("ra = " + ra);
-		double rSo = (0.75 + altitudeZ * 2 / 100000) * ra;
+		double rSo = (0.75 + (double) altitudeZ * 2.0 / 100000.0) * ra;
 		double rs = 0.16 * Math.sqrt(tMax - tMin) * ra;
 		
 		double sbVal = (4.903 / 1000000000) * (Math.exp(4 * Math.log(tMax + 273.16)) + Math.exp(4 * Math.log(tMin + 273.16))) / 2;
