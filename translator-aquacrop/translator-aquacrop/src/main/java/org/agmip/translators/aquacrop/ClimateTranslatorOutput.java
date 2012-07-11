@@ -1,12 +1,5 @@
 package org.agmip.translators.aquacrop;
 
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 import java.util.Map;
 
 import org.agmip.core.types.TranslatorOutput;
@@ -15,19 +8,9 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
-public class ClimateTranslatorOutput implements TranslatorOutput {
+public class ClimateTranslatorOutput extends BaseTranslatorOutput implements TranslatorOutput {
 
-	private final static String AQUACROP_VERSION = "4.0";
 	private final static String CO2_FILE_NAME = "maunaloa.co2";
-	
-	/* A climate file (Tab. 1) contains in successive lines:
-		−	a description (string of characters);
-		−	the number of the AquaCrop Version (expressed as a decimal number);
-		−	the name of the air temperature file (*.TMP);
-		−	the name of the ETo file (*.ETo);
-		−	the name of the rainfall file (*.PLU);
-		−	the name of the CO2 file (*.CO2).
-	 */
 	
 	public void writeFile(String file, Map data) {
 		Velocity.init();
@@ -60,32 +43,5 @@ public class ClimateTranslatorOutput implements TranslatorOutput {
 		vc.put("co2_file", CO2_FILE_NAME);
 		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_cli_file_template.vsl", "UTF-8");
 		writeFile(vc, t, file.substring(0, pos) + ".cli");
-	}
-	
-	
-	private void writeFile(VelocityContext context, Template template, String file) {
-		try {
-            FileOutputStream fstream = new FileOutputStream(file);
-            DataOutputStream out = new DataOutputStream(fstream);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out, Charset.forName("UTF-8")));
-    		template.merge(context, bw);
-            bw.flush();
-            bw.close();
-            System.out.println("Created output file: " + file);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Could not create output file: " + e.getMessage());
-		}
-	}
-
-	
-	public class AquaCropFormatter {
-		public String headerInt(int val) {
-			return String.format("%7s", String.valueOf(val));
-		}
-		
-		public String dbl(double val) {
-			return String.format("%8.1f", val);
-		}
 	}
 }
