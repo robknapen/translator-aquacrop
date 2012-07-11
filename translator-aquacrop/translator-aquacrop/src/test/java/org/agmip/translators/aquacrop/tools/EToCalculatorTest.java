@@ -1,6 +1,5 @@
 package org.agmip.translators.aquacrop.tools;
 
-import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Before;

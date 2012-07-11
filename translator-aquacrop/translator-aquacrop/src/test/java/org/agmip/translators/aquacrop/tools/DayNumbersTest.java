@@ -13,34 +13,34 @@ public class DayNumbersTest {
 
 	@Test
 	public void testDayNumberCalculations() {
-		Assert.assertEquals(1, DayNumbers.calculateDayNumber(1, 1, 1901));
-		Assert.assertEquals(31, DayNumbers.calculateDayNumber(31, 1, 1901));
-		Assert.assertEquals(365, DayNumbers.calculateDayNumber(31, 12, 1901));
-		Assert.assertEquals(366, DayNumbers.calculateDayNumber(1, 1, 1902));
+		Assert.assertEquals(1, DayNumbers.calculateDayNumber(1, 1, 1901, true));
+		Assert.assertEquals(31, DayNumbers.calculateDayNumber(31, 1, 1901, true));
+		Assert.assertEquals(365, DayNumbers.calculateDayNumber(31, 12, 1901, true));
+		Assert.assertEquals(366, DayNumbers.calculateDayNumber(1, 1, 1902, true));
 	}
 	
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testYearOutOfRange() {
-		DayNumbers.calculateDayNumber(1, 1, 1900);
+		DayNumbers.calculateDayNumber(1, 1, 1900, true);
 	}
 
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDayOutOfRange() {
-		DayNumbers.calculateDayNumber(0, 1, 1901);
+		DayNumbers.calculateDayNumber(0, 1, 1901, true);
 	}
 
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidDayInMonth() {
-		DayNumbers.calculateDayNumber(29, 2, 1901);
+		DayNumbers.calculateDayNumber(29, 2, 1901, true);
 	}
 	
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testMonthOutOfRange() {
-		DayNumbers.calculateDayNumber(1, 0, 1901);
+		DayNumbers.calculateDayNumber(1, 0, 1901, true);
 	}
 	
 }

@@ -41,9 +41,9 @@ public class TranslationTest extends TestCase {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-
 	}
 
+	
 	/**
 	 * @return the suite of tests being tested
 	 */
@@ -51,6 +51,7 @@ public class TranslationTest extends TestCase {
 		return new TestSuite(TranslationTest.class);
 	}
 
+	
 	/**
 	 * Rigourous Test :-)
 	 */
@@ -59,7 +60,7 @@ public class TranslationTest extends TestCase {
 
 		try {
 			File tempFile = File.createTempFile("tmp_agmip_aquacrop_climate", ".txt");
-			t.writeFile(tempFile.getAbsolutePath(), inputMap);
+			t.velocitySample(tempFile.getAbsolutePath(), inputMap);
 			
 			// TODO: Add real tests!!!
 			
@@ -69,10 +70,4 @@ public class TranslationTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
-	
-	public void testVelocitySample() {
-		ClimateTranslatorOutput t = new ClimateTranslatorOutput();
-		t.velocitySample();
-	}
-}
+}	

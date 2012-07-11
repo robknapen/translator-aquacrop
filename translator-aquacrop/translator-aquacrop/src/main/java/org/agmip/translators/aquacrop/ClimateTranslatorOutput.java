@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.agmip.core.types.TranslatorOutput;
+import org.agmip.translators.aquacrop.domain.Weather;
 import org.agmip.util.MapUtil;
 import org.agmip.util.MapUtil.BucketEntry;
 import org.apache.velocity.Template;
@@ -74,17 +75,15 @@ public class ClimateTranslatorOutput implements TranslatorOutput {
 	}
 
 	
-	public void velocitySample() {
+	public void velocitySample(String file, Map data) {
 		Velocity.init();
 		VelocityContext vc = new VelocityContext();
-
-		vc.put("format", new AquaCropFormatter());
 		
-		vc.put("wst_name", new String("Weather Station Name"));
-		vc.put("record_type", 1);
-		vc.put("first_day_of_record", 1);
-		vc.put("first_month_of_record", 1);
-		vc.put("first_year_of_record", 1901);
+		Weather weather = Weather.create(data);
+		assert(weather.getDaily().size() > 0);
+		
+		vc.put("format", new AquaCropFormatter());
+		vc.put("weather", weather);
 		
 		Template template = null;
 		try {
@@ -104,6 +103,10 @@ public class ClimateTranslatorOutput implements TranslatorOutput {
 	public class AquaCropFormatter {
 		public String headerInt(int val) {
 			return String.format("%7s", String.valueOf(val));
+		}
+		
+		public String dbl(double val) {
+			return String.format("%8.1f", val);
 		}
 	}
 }

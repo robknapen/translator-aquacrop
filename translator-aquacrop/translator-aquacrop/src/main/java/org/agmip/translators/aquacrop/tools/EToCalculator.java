@@ -13,7 +13,7 @@ public class EToCalculator {
 	 * @param tMin Minimum air temperature (degrees C)
 	 * @return ET reference
 	 */
-	public static double calculateETReference(int day, double latDeg, int altitudeZ, double tMax, double tMin) {
+	public static double calculateETReference(int day, double latDeg, double altitudeZ, double tMax, double tMin) {
 		double pAtm = Math.exp(Math.log(101.3) + 5.26 * Math.log((293 - 0.0065 * altitudeZ) / 293));
 		double psyConst = pAtm * 0.664742 / 1000;
 		double tMean = (tMax + tMin) / 2;
@@ -25,7 +25,7 @@ public class EToCalculator {
 		double u2 = 2.0;
 		
 		double ra = calculateExtraTerrestrialRadiation(day, latDeg);
-		double rSo = (0.75 + (double) altitudeZ * 2.0 / 100000.0) * ra;
+		double rSo = (0.75 + altitudeZ * 2.0 / 100000.0) * ra;
 		double rs = 0.16 * Math.sqrt(tMax - tMin) * ra;
 		
 		double sbVal = (4.903 / 1000000000) * (Math.exp(4 * Math.log(tMax + 273.16)) + Math.exp(4 * Math.log(tMin + 273.16))) / 2;

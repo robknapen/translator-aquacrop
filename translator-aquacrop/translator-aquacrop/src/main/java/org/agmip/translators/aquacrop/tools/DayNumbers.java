@@ -9,6 +9,35 @@ public class DayNumbers {
 			120.25, 151.25, 181.25, 212.25, 243.25, 273.25, 304.25, 334.25 };
 	
 	private static final Calendar _calendar = new GregorianCalendar();
+
+	
+	public static int calculateDayInYear(String dateString, boolean checked) {
+        int year = Integer.valueOf(dateString.substring(0, 4));
+        int month = Integer.valueOf(dateString.substring(4, 6));
+        int day = Integer.valueOf(dateString.substring(6, 8));
+		return calculateDayInYear(day, month, year, checked);
+	}
+	
+	
+	public static int calculateDayInYear(int day, int month, int year, boolean checked) {
+		if (checked) {
+			checkDayNumberInput(day, month, year);
+		}
+		
+		_calendar.set(Calendar.YEAR, year);
+		_calendar.set(Calendar.MONTH, month - 1);
+		_calendar.set(Calendar.DAY_OF_MONTH, day);
+		
+		return _calendar.get(Calendar.DAY_OF_YEAR);
+	}
+	
+	
+	public static long calculateDayNumber(String dateString, boolean checked) {
+        int year = Integer.valueOf(dateString.substring(0, 4));
+        int month = Integer.valueOf(dateString.substring(4, 6));
+        int day = Integer.valueOf(dateString.substring(6, 8));
+		return calculateDayNumber(day, month, year, checked);
+	}
 	
 	
 	/**
@@ -23,11 +52,13 @@ public class DayNumbers {
 	 * @param year
 	 * @return calculated day number for AquaCrop
 	 */
-	public static long calculateDayNumber(int day, int month, int year) {
-		checkDayNumberInput(day, month, year);
+	public static long calculateDayNumber(int day, int month, int year, boolean checked) {
+		if (checked) {
+			checkDayNumberInput(day, month, year);
+		}
 		return (long) ((year - 1901) * 365.25 + ELAPSED_DAYS[month - 1] + day + 0.05);
 	}
-
+	
 	
 	/**
 	 * Checks wether the specified arguments for the day number calculation
