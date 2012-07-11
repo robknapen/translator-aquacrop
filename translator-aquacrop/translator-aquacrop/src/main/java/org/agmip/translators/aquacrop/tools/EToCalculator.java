@@ -59,7 +59,8 @@ public class EToCalculator {
 			omegaS = Math.acos(tanTan);
 		}
 		
-		double ra = (24 * 60/Math.PI) * 0.0820 * dr * (omegaS * Math.sin(latRad) * Math.sin(delta) + Math.cos(latRad) * Math.cos(delta) * Math.sin(omegaS));
+		double ra = (24 * 60/Math.PI) * 0.0820 * dr * 
+				(omegaS * Math.sin(latRad) * Math.sin(delta) + Math.cos(latRad) * Math.cos(delta) * Math.sin(omegaS));
 		return ra;
 	}
 	

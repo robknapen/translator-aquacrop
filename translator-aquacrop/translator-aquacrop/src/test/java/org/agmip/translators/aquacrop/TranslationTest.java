@@ -69,4 +69,10 @@ public class TranslationTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	
+	public void testVelocitySample() {
+		ClimateTranslatorOutput t = new ClimateTranslatorOutput();
+		t.velocitySample();
+	}
 }

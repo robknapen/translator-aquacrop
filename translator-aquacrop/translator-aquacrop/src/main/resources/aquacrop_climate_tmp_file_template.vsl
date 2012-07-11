@@ -1,0 +1,13 @@
+## Sample Velocity Template
+#macro(hint $val)${format.headerInt($val)}#end
+$wst_name
+
+#hint($record_type) : Daily records (1=daily, 2=10-daily and 3=monthly)
+#hint($first_day_of_record) : First day of record (1, 11 or 21 for 10-day or 1 for months)
+#hint($first_month_of_record) : First month of record
+#hint($first_year_of_record) : First year of record (1901 if not linked to a specific year)
+
+  TMin (C)   TMax (C)
+========================
+
+

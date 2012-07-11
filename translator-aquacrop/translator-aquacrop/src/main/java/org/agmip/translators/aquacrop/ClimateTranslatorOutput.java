@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,6 +15,11 @@ import java.util.Map;
 import org.agmip.core.types.TranslatorOutput;
 import org.agmip.util.MapUtil;
 import org.agmip.util.MapUtil.BucketEntry;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.tools.generic.DisplayTool;
+import org.apache.velocity.tools.generic.NumberTool;
 
 public class ClimateTranslatorOutput implements TranslatorOutput {
 
@@ -67,4 +73,37 @@ public class ClimateTranslatorOutput implements TranslatorOutput {
         }
 	}
 
+	
+	public void velocitySample() {
+		Velocity.init();
+		VelocityContext vc = new VelocityContext();
+
+		vc.put("format", new AquaCropFormatter());
+		
+		vc.put("wst_name", new String("Weather Station Name"));
+		vc.put("record_type", 1);
+		vc.put("first_day_of_record", 1);
+		vc.put("first_month_of_record", 1);
+		vc.put("first_year_of_record", 1901);
+		
+		Template template = null;
+		try {
+			template = Velocity.getTemplate("src/main/resources/aquacrop_climate_tmp_file_template.vsl", "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Could not load Velocity template: " + e.getMessage());
+		}
+		
+		StringWriter sw = new StringWriter();
+		template.merge(vc, sw);
+		
+		System.out.println(sw.toString());
+	}
+	
+	
+	public class AquaCropFormatter {
+		public String headerInt(int val) {
+			return String.format("%7s", String.valueOf(val));
+		}
+	}
 }
