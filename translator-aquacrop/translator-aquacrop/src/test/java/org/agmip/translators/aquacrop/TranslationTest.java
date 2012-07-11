@@ -59,8 +59,8 @@ public class TranslationTest extends TestCase {
 		ClimateTranslatorOutput t = new ClimateTranslatorOutput();
 
 		try {
-			File tempFile = File.createTempFile("tmp_agmip_aquacrop_climate", ".txt");
-			t.velocitySample(tempFile.getAbsolutePath(), inputMap);
+			File tempFile = File.createTempFile("tmp_agmip_aquacrop_climate", ".cli");
+			t.writeFile(tempFile.getAbsolutePath(), inputMap);
 			
 			// TODO: Add real tests!!!
 			

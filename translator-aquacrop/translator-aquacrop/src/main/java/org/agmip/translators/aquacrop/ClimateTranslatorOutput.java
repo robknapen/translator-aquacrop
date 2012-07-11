@@ -6,76 +6,30 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.agmip.core.types.TranslatorOutput;
 import org.agmip.translators.aquacrop.domain.Weather;
-import org.agmip.util.MapUtil;
-import org.agmip.util.MapUtil.BucketEntry;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.tools.generic.DisplayTool;
-import org.apache.velocity.tools.generic.NumberTool;
 
 public class ClimateTranslatorOutput implements TranslatorOutput {
 
-	public void writeFile(String file, Map data) {
-
-		// get the block of weather data
-        List<BucketEntry> weatherData = MapUtil.getBucket(data, "weather");
-        assert(weatherData.size() == 1);
-        
-        try {
-        	// create the output
-            FileOutputStream fstream = new FileOutputStream(file);
-            DataOutputStream out = new DataOutputStream(fstream);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out, Charset.forName("UTF-8")));
-
-            // get the global weather station data
-        	Map<String, String> globalWeatherData = weatherData.get(0).getValues();
-            String wsName = MapUtil.getValueOr(globalWeatherData, "wst_name", "<name of weather station>");
-            
-            // get the daily weather station data
-            List<LinkedHashMap<String, String>> dailyWeatherData = weatherData.get(0).getDataList();
-            assert(dailyWeatherData.size() > 0);
-            
-            String date = (String) MapUtil.getValueOr(dailyWeatherData.get(0), "w_date", "19010101");
-            String year = String.copyValueOf(date.toCharArray(), 0, 4);
-            String month = String.copyValueOf(date.toCharArray(), 4, 2);
-            String day = String.copyValueOf(date.toCharArray(), 6, 2);
-
-            bw.write(wsName + "\n");
-            bw.write("      1 : Daily records (1=daily, 2=10-daily and 3=monthly\n");
-            bw.write(String.format("%7s : First day of record (1, 11 or 21 for 10-day or 1 for months\n", day));
-            bw.write(String.format("%7s : First month of record" + "\n", month));
-            bw.write(String.format("%7s : First year of record (1901 if not linked to a specific year)\n\n", year));
-
-            bw.write("  TMin (C)   TMax (C)" + "\n");
-            bw.write("========================" + "\n");
-
-            for (Map<String, String> dailyData : dailyWeatherData) {
-                String tmin = MapUtil.getValueOr(dailyData, "tmin", "");
-                String tmax = MapUtil.getValueOr(dailyData, "tmax", "");
-                bw.write(String.format("%10s%10s\n", tmin, tmax));
-            }
-            
-            bw.flush();
-            bw.close();
-            System.out.println("Created file: " + file);
-        } catch (FileNotFoundException e) {
-            System.out.println("file not found");
-        } catch (IOException e) {
-            System.out.println("IO error");
-        }
-	}
-
+	private final static String AQUACROP_VERSION = "4.0";
+	private final static String CO2_FILE_NAME = "maunaloa.co2";
 	
-	public void velocitySample(String file, Map data) {
+	/* A climate file (Tab. 1) contains in successive lines:
+		−	a description (string of characters);
+		−	the number of the AquaCrop Version (expressed as a decimal number);
+		−	the name of the air temperature file (*.TMP);
+		−	the name of the ETo file (*.ETo);
+		−	the name of the rainfall file (*.PLU);
+		−	the name of the CO2 file (*.CO2).
+	 */
+	
+	public void writeFile(String file, Map data) {
 		Velocity.init();
 		VelocityContext vc = new VelocityContext();
 		
@@ -83,22 +37,47 @@ public class ClimateTranslatorOutput implements TranslatorOutput {
 		assert(weather.getDaily().size() > 0);
 		
 		vc.put("format", new AquaCropFormatter());
+		vc.put("aquacrop_version", AQUACROP_VERSION);
 		vc.put("weather", weather);
 		
-		Template template = null;
-		try {
-			template = Velocity.getTemplate("src/main/resources/aquacrop_climate_tmp_file_template.vsl", "UTF-8");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Could not load Velocity template: " + e.getMessage());
-		}
-		
-		StringWriter sw = new StringWriter();
-		template.merge(vc, sw);
-		
-		System.out.println(sw.toString());
+		Template t = Velocity.getTemplate("src/main/resources/aquacrop_climate_tmp_file_template.vsl", "UTF-8");
+		int pos = file.lastIndexOf(".");
+		String temperatureFile = file.substring(0, pos) + ".tmp";
+		writeFile(vc, t, temperatureFile);
+
+		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_et0_file_template.vsl", "UTF-8");
+		String et0File = file.substring(0, pos) + ".et0";
+		writeFile(vc, t, et0File);
+
+		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_plu_file_template.vsl", "UTF-8");
+		String rainFile = file.substring(0, pos) + ".plu";
+		writeFile(vc, t, rainFile);
+
+		// write the overall climate file
+		vc.put("temp_file", temperatureFile);
+		vc.put("et0_file", et0File);
+		vc.put("rain_file", rainFile);
+		vc.put("co2_file", CO2_FILE_NAME);
+		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_cli_file_template.vsl", "UTF-8");
+		writeFile(vc, t, file.substring(0, pos) + ".cli");
 	}
 	
+	
+	private void writeFile(VelocityContext context, Template template, String file) {
+		try {
+            FileOutputStream fstream = new FileOutputStream(file);
+            DataOutputStream out = new DataOutputStream(fstream);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out, Charset.forName("UTF-8")));
+    		template.merge(context, bw);
+            bw.flush();
+            bw.close();
+            System.out.println("Created output file: " + file);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Could not create output file: " + e.getMessage());
+		}
+	}
+
 	
 	public class AquaCropFormatter {
 		public String headerInt(int val) {

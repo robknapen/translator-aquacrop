@@ -1,0 +1,9 @@
+##
+## AquaCrop Climate Data - Main File
+##
+$weather.name
+$aquacrop_version : AquaCrop Version
+$temp_file
+$et0_file
+$rain_file
+$co2_file

@@ -1,5 +1,5 @@
 ##
-## AquaCrop Climate Data - Air Temperature
+## AquaCrop Climate Data - Rainfall
 ##
 #macro(hint $val)${format.headerInt($val)}#end
 #macro(dbl $val)${format.dbl($val)}#end
@@ -11,9 +11,9 @@ $weather.name
 #hint(${weather.daily.get(0).month}) : First month of record
 #hint(${weather.daily.get(0).year}) : First year of record (1901 if not linked to a specific year)
 
-  TMin (C)   TMax (C)
+  Total Rain (mm)
 ========================
 #foreach($daily in $weather.daily)
-  #dbl(${daily.minTemp}) #dbl($daily.maxTemp)
+  #dbl(${daily.rain})
    
 #end
