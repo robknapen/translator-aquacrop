@@ -53,9 +53,9 @@ public class TranslationTest extends TestCase {
 
 	
 	/**
-	 * Rigourous Test :-)
+	 * Test the translation of weather data
 	 */
-	public void testTranslation() {
+	public void testWeatherTranslation() {
 		ClimateTranslatorOutput t = new ClimateTranslatorOutput();
 
 		try {
@@ -70,4 +70,25 @@ public class TranslationTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	
+	/**
+	 * Test the translation of soil data
+	 */
+	public void testSoilTranslation() {
+		SoilTranslatorOutput t = new SoilTranslatorOutput();
+
+		try {
+			File tempFile = File.createTempFile("tmp_agmip_aquacrop_soil", ".sol");
+			t.writeFile(tempFile.getAbsolutePath(), inputMap);
+			
+			// TODO: Add real tests!!!
+			
+			assertTrue(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
 }	

@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+
 public class BaseTranslatorOutput {
 
 	public final static String AQUACROP_VERSION = "4.0";
@@ -39,5 +40,4 @@ public class BaseTranslatorOutput {
 			System.err.println("Could not create output file: " + e.getMessage());
 		}
 	}
-	
 }

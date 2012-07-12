@@ -29,39 +29,37 @@ public class Weather {
 	
 	
 	public void from(Map data) {
-		// get the block of weather data
-        List<BucketEntry> weatherData = MapUtil.getBucket(data, "weather");
-        assert(weatherData.size() == 1);
+		// get the block of relevant data
+        List<BucketEntry> dataBucket = MapUtil.getBucket(data, "weather");
+        assert(dataBucket.size() == 1);
         
         // get the global weather station data
-    	Map<String, String> globalWeatherData = weatherData.get(0).getValues();
-        name = MapUtil.getValueOr(globalWeatherData, "wst_name", "Unknown");
-        latitude = Double.valueOf(MapUtil.getValueOr(globalWeatherData, "wst_lat", "0.0"));
-        longitude = Double.valueOf(MapUtil.getValueOr(globalWeatherData, "wst_long", "0.0"));
-        elevation = Double.valueOf(MapUtil.getValueOr(globalWeatherData, "elev", "0.0"));
+    	Map<String, String> globalData = dataBucket.get(0).getValues();
+        name = MapUtil.getValueOr(globalData, "wst_name", "Unknown");
+        latitude = Double.valueOf(MapUtil.getValueOr(globalData, "wst_lat", "0.0"));
+        longitude = Double.valueOf(MapUtil.getValueOr(globalData, "wst_long", "0.0"));
+        elevation = Double.valueOf(MapUtil.getValueOr(globalData, "elev", "0.0"));
         
         // get the daily weather station data
-        List<LinkedHashMap<String, String>> dailyWeatherData = weatherData.get(0).getDataList();
-        assert(dailyWeatherData.size() > 0);
-        firstDate = (String) MapUtil.getValueOr(dailyWeatherData.get(0), "w_date", "19010101");
+        List<LinkedHashMap<String, String>> dataItems = dataBucket.get(0).getDataList();
+        assert(dataItems.size() > 0);
+        firstDate = (String) MapUtil.getValueOr(dataItems.get(0), "w_date", "19010101");
             
         daily.clear();
-        for (Map<String, String> dailyData : dailyWeatherData) {
-        	daily.add(DailyWeather.create(dailyData));
+        for (Map<String, String> dataItem : dataItems) {
+        	// create a new item
+        	DailyWeather item = DailyWeather.create(dataItem);
+        	
+        	// fill in derived data
+			int day = DayNumbers.calculateDayInYear(item.getDate(), false);
+			item.setET0(EToCalculator.calculateETReference(day, latitude, elevation, item.getMaxTemp(), item.getMinTemp()));
+			
+			// store it
+        	daily.add(item);
         }
-        
-        calculateET0();
 	}
 	
 	
-	public void calculateET0() {
-		for (DailyWeather dw : daily) {
-			int day = DayNumbers.calculateDayInYear(dw.getDate(), false);
-			dw.setET0(EToCalculator.calculateETReference(day, latitude, elevation, dw.getMaxTemp(), dw.getMinTemp()));
-		}
-	}
-
-
 	public String getName() {
 		return name;
 	}

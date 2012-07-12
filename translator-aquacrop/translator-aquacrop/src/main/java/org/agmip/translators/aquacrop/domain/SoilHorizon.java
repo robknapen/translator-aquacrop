@@ -2,15 +2,22 @@ package org.agmip.translators.aquacrop.domain;
 
 import java.util.Map;
 
+import org.agmip.translators.aquacrop.tools.MapHelper;
+import org.agmip.util.MapUtil;
+
 
 @SuppressWarnings({"rawtypes", "unchecked"}) 
 public class SoilHorizon {
 
-	private double thickness;
+	// extracted data
+	private double soilLayerBaseDepth;
 	private double soilWaterContentAtSaturation;
 	private double soilWaterContentAtFieldCapacity;
 	private double soilWaterContentAtPermanentWiltingPoint;
 	private double saturatedHydrolicConductivity;
+	
+	// derived data
+	private double thickness;
 	private double capillaryRiseEstimationParameterA;
 	private double capillaryRiseEstimationParameterB;
 	private String description;
@@ -24,7 +31,30 @@ public class SoilHorizon {
 	
 	
 	public void from(Map data) {
-		// TODO
+		soilLayerBaseDepth = Double.valueOf(MapUtil.getValueOr(data, "sllb", "0.0"));
+		soilWaterContentAtSaturation = Double.valueOf(MapUtil.getValueOr(data, "slsat", "0.0"));
+		saturatedHydrolicConductivity = Double.valueOf(MapUtil.getValueOr(data, "sksat", "0.0"));
+
+		String wpVal = MapHelper.getValueForFirstAvailableKey(data, new String[]{"slwp", "slll"} , null);
+		String fcVal = MapHelper.getValueForFirstAvailableKey(data, new String[]{"slfc1", "sldul"} , null);
+		if ((wpVal != null) && (fcVal != null)) {
+			soilWaterContentAtPermanentWiltingPoint = Double.valueOf(wpVal);
+			soilWaterContentAtFieldCapacity = Double.valueOf(fcVal);
+		} else {
+			// TODO: try to look up values based on SLTX (soil type code)
+			soilWaterContentAtPermanentWiltingPoint = 0.0;
+			soilWaterContentAtFieldCapacity = 0.0;
+		}
+	}
+
+
+	public double getSoilLayerBaseDepth() {
+		return soilLayerBaseDepth;
+	}
+
+
+	public void setSoilLayerBaseDepth(double soilLayerBaseDepth) {
+		this.soilLayerBaseDepth = soilLayerBaseDepth;
 	}
 
 
