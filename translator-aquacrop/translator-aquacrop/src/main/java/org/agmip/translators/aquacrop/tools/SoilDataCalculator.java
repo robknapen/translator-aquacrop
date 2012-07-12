@@ -1,8 +1,69 @@
 package org.agmip.translators.aquacrop.tools;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.agmip.translators.aquacrop.domain.SoilHorizon;
+
 public class SoilDataCalculator {
 	
 	private final static double SURFACE_LAYER_Z = 0.04; // meter
+
+	private Map<String, SoilLookupEntry> lookup = new LinkedHashMap<String, SoilLookupEntry>();
+	
+	
+	protected class SoilLookupEntry {
+		String name;
+		double satVolPro;
+		double fcVolPro;
+		double pwpVolPro;
+		double kSatMM;
+		
+		public SoilLookupEntry(String name, double sat, double fc, double pwp, double ksat) {
+			this.name = name;
+			satVolPro = sat;
+			fcVolPro = fc;
+			pwpVolPro = pwp;
+			kSatMM = ksat;
+		}
+	}
+	
+	
+	public SoilDataCalculator() {
+		// set up the lookup table
+		lookup.put("CSA,FSA,SA,VFSA", new SoilLookupEntry("Sand", 36.0, 13.0, 6.0, 1500.0));
+		lookup.put("CLOSA,FLOSA,LOSA,VFLOS", new SoilLookupEntry("Loamy sand", 38.0, 16.0, 8.0, 800.0));
+		lookup.put("CSALO,FSALO,VFSAL,SALO", new SoilLookupEntry("Sandy loam", 41.0, 22.0, 10.0, 500.0));
+		lookup.put("FLO,LO", new SoilLookupEntry("Loam", 46.0, 31.0, 15.0, 250.0));
+		lookup.put("SILO", new SoilLookupEntry("Silt loam", 46.0, 33.0, 13.0, 150.0));
+		lookup.put("CSI,SI", new SoilLookupEntry("Silt", 43.0, 33.0, 9.0, 50.0));
+		lookup.put("SACLL", new SoilLookupEntry("Sandy clay loam", 47.0, 32.0, 20.0, 125.0));
+		lookup.put("CLLO", new SoilLookupEntry("Clay loam", 50.0, 39.0, 23.0, 100.0));
+		lookup.put("SICLL", new SoilLookupEntry("Silty clay loam", 52.0, 44.0, 23.0, 120.0));
+		lookup.put("SACL", new SoilLookupEntry("Sandy clay", 50.0, 39.0, 27.0, 75.0));
+		lookup.put("SICL", new SoilLookupEntry("Silty clay", 54.0, 50.0, 32.0, 15.0));
+		lookup.put("CL", new SoilLookupEntry("Clay", 55.0, 54.0, 39.0, 2.0));
+	}
+
+	
+	public void initFromAgMIPCode(SoilHorizon horizon, String sltxCode) {
+		if ((horizon == null) || (sltxCode == null)) {
+			return;
+		}
+		for (String key : lookup.keySet()) {
+			for (String code : key.split(",")) {
+				if (code.equalsIgnoreCase(sltxCode)) {
+					SoilLookupEntry entry = lookup.get(key);
+					horizon.setDescription(entry.name);
+					horizon.setSaturatedHydrolicConductivity(entry.kSatMM);
+					horizon.setSoilWaterContentAtFieldCapacity(entry.fcVolPro);
+					horizon.setSoilWaterContentAtPermanentWiltingPoint(entry.pwpVolPro);
+					horizon.setSoilWaterContentAtSaturation(entry.satVolPro);
+					return;
+				}
+			}
+		}
+	}
 	
 	
 	public static int calculateSoilClass(double satVolPro, double pwpVolPro, double fcVolPro, double kSatMM) {
@@ -87,5 +148,4 @@ public class SoilDataCalculator {
 		}
 		return rew;
 	}
-	
 }

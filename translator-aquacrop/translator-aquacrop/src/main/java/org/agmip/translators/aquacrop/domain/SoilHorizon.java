@@ -3,6 +3,7 @@ package org.agmip.translators.aquacrop.domain;
 import java.util.Map;
 
 import org.agmip.translators.aquacrop.tools.MapHelper;
+import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
 import org.agmip.util.MapUtil;
 
 
@@ -41,9 +42,10 @@ public class SoilHorizon {
 			soilWaterContentAtPermanentWiltingPoint = Double.valueOf(wpVal) * 100; // cm3/cm3 -> vol%
 			soilWaterContentAtFieldCapacity = Double.valueOf(fcVal) * 100; // cm3/cm3 -> vol%
 		} else {
-			// TODO: try to look up values based on SLTX (soil type code)
-			soilWaterContentAtPermanentWiltingPoint = 0.0;
-			soilWaterContentAtFieldCapacity = 0.0;
+			// derive values from lookup table based on the SLTX code
+			SoilDataCalculator sdc = new SoilDataCalculator();
+			String sltxCode = MapUtil.getValueOr(data, "sltx", null);
+			sdc.initFromAgMIPCode(this, sltxCode);
 		}
 	}
 
