@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.agmip.translators.aquacrop.tools.DayNumbers;
-import org.agmip.translators.aquacrop.tools.EToCalculator;
+import org.agmip.translators.aquacrop.tools.WeatherDataCalculator;
 import org.agmip.util.MapUtil;
 import org.agmip.util.MapUtil.BucketEntry;
 
@@ -52,7 +52,7 @@ public class Weather {
         	
         	// fill in derived data
 			int day = DayNumbers.calculateDayInYear(item.getDate(), false);
-			item.setET0(EToCalculator.calculateETReference(day, latitude, elevation, item.getMaxTemp(), item.getMinTemp()));
+			item.setET0(WeatherDataCalculator.calculateETReference(day, latitude, elevation, item.getMaxTemp(), item.getMinTemp()));
 			
 			// store it
         	daily.add(item);
