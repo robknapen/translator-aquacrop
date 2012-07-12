@@ -31,6 +31,17 @@ public class SoilDataCalculator {
 		}
 		return 4; // silty clayey soils
 	}
+	
+	
+	public static String soilClassDescription(int soilClass) {
+		switch (soilClass) {
+			case 1: return "sandy";
+			case 2: return "loamy";
+			case 3: return "sandy clayey";
+			case 4: return "silty clayey";
+			default : return "unknown";
+		}
+	}
 
 	
 	public static double calculateCapillaryRiseEstimationParameterA(int soilClass, double kSatMM) {

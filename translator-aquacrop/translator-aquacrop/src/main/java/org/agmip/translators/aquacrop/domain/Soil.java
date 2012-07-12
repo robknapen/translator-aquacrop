@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
 import org.agmip.util.MapUtil;
 import org.agmip.util.MapUtil.BucketEntry;
 
@@ -43,9 +44,6 @@ public class Soil {
         classification = MapUtil.getValueOr(globalData, "classification", "Unknown");
         curveNumber = Integer.valueOf(MapUtil.getValueOr(globalData, "slro", "0"));
 
-        // TODO readilyEvaporatedWater -> needs to be calculated
-        readilyEvaporatedWater = 0.0;
-        
         // get the soil horizons data
         List<LinkedHashMap<String, String>> dataItems = dataBucket.get(0).getDataList();
         assert(dataItems.size() > 0);
@@ -60,14 +58,31 @@ public class Soil {
         	item.setThickness(item.getSoilLayerBaseDepth() - previousSoilLayerBaseDepth);
         	previousSoilLayerBaseDepth = item.getSoilLayerBaseDepth();
         	
-        	// TODO
-        	item.setDescription("");
-        	item.setCapillaryRiseEstimationParameterA(0.0);
-        	item.setCapillaryRiseEstimationParameterB(0.0);
+        	int soilClass = SoilDataCalculator.calculateSoilClass(
+        			item.getSoilWaterContentAtSaturation(), 
+        			item.getSoilWaterContentAtPermanentWiltingPoint(), 
+        			item.getSoilWaterContentAtFieldCapacity(), 
+        			item.getSaturatedHydrolicConductivity());
+        	
+        	item.setDescription(SoilDataCalculator.soilClassDescription(soilClass));
+        	
+        	item.setCapillaryRiseEstimationParameterA(
+        			SoilDataCalculator.calculateCapillaryRiseEstimationParameterA(
+        					soilClass, item.getSaturatedHydrolicConductivity()));
+        	
+        	item.setCapillaryRiseEstimationParameterB(
+        			SoilDataCalculator.calculateCapillaryRiseEstimationParameterB(
+        					soilClass, item.getSaturatedHydrolicConductivity()));
         	
         	// store it
         	horizons.add(item);
         }
+        
+        // calculate readilyEvaporatedWater from top soil horizon
+        SoilHorizon top = horizons.get(0);
+        readilyEvaporatedWater = SoilDataCalculator.calculateReadilyEvaporableWater(
+        		top.getSoilWaterContentAtFieldCapacity(),
+        		top.getSoilWaterContentAtPermanentWiltingPoint());
 	}
 
 

@@ -32,14 +32,14 @@ public class SoilHorizon {
 	
 	public void from(Map data) {
 		soilLayerBaseDepth = Double.valueOf(MapUtil.getValueOr(data, "sllb", "0.0"));
-		soilWaterContentAtSaturation = Double.valueOf(MapUtil.getValueOr(data, "slsat", "0.0"));
-		saturatedHydrolicConductivity = Double.valueOf(MapUtil.getValueOr(data, "sksat", "0.0"));
+		soilWaterContentAtSaturation = Double.valueOf(MapUtil.getValueOr(data, "slsat", "0.0")) * 100; // cm3/cm3 -> vol%
+		saturatedHydrolicConductivity = Double.valueOf(MapUtil.getValueOr(data, "sksat", "0.0")) * 240; // cm/h -> mm/d
 
 		String wpVal = MapHelper.getValueForFirstAvailableKey(data, new String[]{"slwp", "slll"} , null);
 		String fcVal = MapHelper.getValueForFirstAvailableKey(data, new String[]{"slfc1", "sldul"} , null);
 		if ((wpVal != null) && (fcVal != null)) {
-			soilWaterContentAtPermanentWiltingPoint = Double.valueOf(wpVal);
-			soilWaterContentAtFieldCapacity = Double.valueOf(fcVal);
+			soilWaterContentAtPermanentWiltingPoint = Double.valueOf(wpVal) * 100; // cm3/cm3 -> vol%
+			soilWaterContentAtFieldCapacity = Double.valueOf(fcVal) * 100; // cm3/cm3 -> vol%
 		} else {
 			// TODO: try to look up values based on SLTX (soil type code)
 			soilWaterContentAtPermanentWiltingPoint = 0.0;
