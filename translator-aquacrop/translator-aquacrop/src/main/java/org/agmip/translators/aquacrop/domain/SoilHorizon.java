@@ -11,7 +11,7 @@ import org.agmip.util.MapUtil;
 public class SoilHorizon {
 
 	// extracted data
-	private double soilLayerBaseDepth;
+	private double baseDepth; // mm
 	private double soilWaterContentAtSaturation;
 	private double soilWaterContentAtFieldCapacity;
 	private double soilWaterContentAtPermanentWiltingPoint;
@@ -32,7 +32,7 @@ public class SoilHorizon {
 	
 	
 	public void from(Map data) {
-		soilLayerBaseDepth = Double.valueOf(MapUtil.getValueOr(data, "sllb", "0.0"));
+		baseDepth = Double.valueOf(MapUtil.getValueOr(data, "sllb", "0.0")) / 100; // cm -> m
 		soilWaterContentAtSaturation = Double.valueOf(MapUtil.getValueOr(data, "slsat", "0.0")) * 100; // cm3/cm3 -> vol%
 		saturatedHydrolicConductivity = Double.valueOf(MapUtil.getValueOr(data, "sksat", "0.0")) * 240; // cm/h -> mm/d
 
@@ -44,19 +44,19 @@ public class SoilHorizon {
 		} else {
 			// derive values from lookup table based on the SLTX code
 			SoilDataCalculator sdc = new SoilDataCalculator();
-			String sltxCode = MapUtil.getValueOr(data, "sltx", null);
+			String sltxCode = MapUtil.getValueOr(data, "sltx", "");
 			sdc.initFromAgMIPCode(this, sltxCode);
 		}
 	}
 
 
 	public double getSoilLayerBaseDepth() {
-		return soilLayerBaseDepth;
+		return baseDepth;
 	}
 
 
 	public void setSoilLayerBaseDepth(double soilLayerBaseDepth) {
-		this.soilLayerBaseDepth = soilLayerBaseDepth;
+		this.baseDepth = soilLayerBaseDepth;
 	}
 
 

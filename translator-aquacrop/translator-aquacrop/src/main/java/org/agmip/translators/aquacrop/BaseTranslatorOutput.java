@@ -20,8 +20,9 @@ public class BaseTranslatorOutput {
 			return String.format("%7s", String.valueOf(val));
 		}
 		
-		public String dbl(double val) {
-			return String.format("%8.1f", val);
+		public String dbl(double val, int size, int decimals) {
+			String frm = String.format("%%%d.%df", size, decimals);
+			return String.format(frm, val);
 		}
 	}
 

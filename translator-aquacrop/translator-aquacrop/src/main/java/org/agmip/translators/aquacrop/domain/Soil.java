@@ -19,7 +19,7 @@ public class Soil {
 	private double longitude;
 	private String classification;
 	private int curveNumber;
-	private double readilyEvaporatedWater;
+	private int readilyEvaporatedWater;
 	private List<SoilHorizon> horizons = new ArrayList<SoilHorizon>();
 
 	
@@ -47,7 +47,7 @@ public class Soil {
         // get the soil horizons data
         List<LinkedHashMap<String, String>> dataItems = dataBucket.get(0).getDataList();
         assert(dataItems.size() > 0);
-            
+
         horizons.clear();
         double previousSoilLayerBaseDepth = 0.0;
         for (Map<String, String> dataItem : dataItems) {
@@ -78,9 +78,12 @@ public class Soil {
         	horizons.add(item);
         }
         
+        // TODO: reduce number of soil layers to a max of 5
+        // repeatedly take average of last two until at 5 layers or less
+        
         // calculate readilyEvaporatedWater from top soil horizon
         SoilHorizon top = horizons.get(0);
-        readilyEvaporatedWater = SoilDataCalculator.calculateReadilyEvaporableWater(
+        readilyEvaporatedWater = (int)SoilDataCalculator.calculateReadilyEvaporableWater(
         		top.getSoilWaterContentAtFieldCapacity(),
         		top.getSoilWaterContentAtPermanentWiltingPoint());
 	}
@@ -106,12 +109,12 @@ public class Soil {
 	}
 
 
-	public double getReadilyEvaporatedWater() {
+	public int getReadilyEvaporatedWater() {
 		return readilyEvaporatedWater;
 	}
 
 
-	public void setReadilyEvaporatedWater(double readilyEvaporatedWater) {
+	public void setReadilyEvaporatedWater(int readilyEvaporatedWater) {
 		this.readilyEvaporatedWater = readilyEvaporatedWater;
 	}
 

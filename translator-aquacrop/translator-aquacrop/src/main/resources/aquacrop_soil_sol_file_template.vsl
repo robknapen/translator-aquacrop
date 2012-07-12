@@ -2,9 +2,11 @@
 ## AquaCrop Soil Data - Main File
 ##
 #macro(hint $val)${format.headerInt($val)}#end
-#macro(dbl $val)${format.dbl($val)}#end
+#macro(vp $val)${format.dbl($val,6,1)}#end
+#macro(dbl $val)${format.dbl($val,8,1)}#end
+#macro(dbl2 $val)${format.dbl($val,8,2)}#end
+#macro(dbl6 $val)${format.dbl($val,8,6)}#end
 ##
-
 #*
 Three layered loamy soil
  4.0      : AquaCrop Version (June 2012)
@@ -18,4 +20,14 @@ Three layered loamy soil
     0.50    46.0  31.0  15.0   250.0    -0.476100  0.506154             loam 
     2.00    46.0  33.0  13.0   150.0    -0.485100  0.262082         silt loam
 *#
-
+$soil.name
+    $aquacrop_version : AquaCrop Version
+#hint(${soil.curveNumber}) : CN (Curve Number)
+#hint(${soil.readilyEvaporatedWater}) : Readily evaporable water from top layer (mm)
+#hint(${soil.horizons.size()}) : number of soil horizons
+  -9.00 : Depth (m) of restrictive soil layer inhibiting root zone expansion - None
+ Thickness Sat     FC      WP      Ksat      CRa       CRb       description
+ ---(m)--- ------(vol %)-------  (mm/day)  -------------------------------------------------
+#foreach($h in $soil.horizons)
+ #dbl2($h.thickness) #vp($h.soilWaterContentAtSaturation) #vp($h.soilWaterContentAtFieldCapacity) #vp($h.soilWaterContentAtPermanentWiltingPoint)  #dbl($h.saturatedHydrolicConductivity)   #dbl6($h.capillaryRiseEstimationParameterA)  #dbl6($h.capillaryRiseEstimationParameterB)  $h.description
+#end
