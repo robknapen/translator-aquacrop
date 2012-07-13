@@ -46,7 +46,26 @@ public class SoilDataCalculator {
 	}
 
 	
-	public void initFromAgMIPCode(SoilHorizon horizon, String sltxCode) {
+	public void initSWCFromAgMIPCode(SoilHorizon horizon, String sltxCode) {
+		if ((horizon == null) || (sltxCode == null)) {
+			return;
+		}
+		for (String key : lookup.keySet()) {
+			for (String code : key.split(",")) {
+				if (code.equalsIgnoreCase(sltxCode)) {
+					SoilLookupEntry entry = lookup.get(key);
+					horizon.setDescription(entry.name);
+					horizon.setSoilWaterContentAtFieldCapacity(entry.fcVolPro);
+					horizon.setSoilWaterContentAtPermanentWiltingPoint(entry.pwpVolPro);
+					horizon.setSoilWaterContentAtSaturation(entry.satVolPro);
+					return;
+				}
+			}
+		}
+	}
+
+	
+	public void initKSatFromAgMIPCode(SoilHorizon horizon, String sltxCode) {
 		if ((horizon == null) || (sltxCode == null)) {
 			return;
 		}
@@ -56,9 +75,6 @@ public class SoilDataCalculator {
 					SoilLookupEntry entry = lookup.get(key);
 					horizon.setDescription(entry.name);
 					horizon.setSaturatedHydrolicConductivity(entry.kSatMM);
-					horizon.setSoilWaterContentAtFieldCapacity(entry.fcVolPro);
-					horizon.setSoilWaterContentAtPermanentWiltingPoint(entry.pwpVolPro);
-					horizon.setSoilWaterContentAtSaturation(entry.satVolPro);
 					return;
 				}
 			}

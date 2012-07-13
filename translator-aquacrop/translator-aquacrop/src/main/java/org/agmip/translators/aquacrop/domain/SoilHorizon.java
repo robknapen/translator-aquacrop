@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.agmip.translators.aquacrop.tools.MapHelper;
 import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
-import org.agmip.util.MapUtil;
 
 
 @SuppressWarnings({"rawtypes", "unchecked"}) 
@@ -32,20 +31,36 @@ public class SoilHorizon {
 	
 	
 	public void from(Map data) {
-		baseDepth = Double.valueOf(MapUtil.getValueOr(data, "sllb", "0.0")) / 100; // cm -> m
-		soilWaterContentAtSaturation = Double.valueOf(MapUtil.getValueOr(data, "slsat", "0.0")) * 100; // cm3/cm3 -> vol%
-		saturatedHydrolicConductivity = Double.valueOf(MapUtil.getValueOr(data, "sksat", "0.0")) * 240; // cm/h -> mm/d
-
-		String wpVal = MapHelper.getValueForFirstAvailableKey(data, new String[]{"slwp", "slll"} , null);
-		String fcVal = MapHelper.getValueForFirstAvailableKey(data, new String[]{"slfc1", "sldul"} , null);
+		// extract AgMIP info
+		String sllbVal	= MapHelper.getValueFor(data, "10.0", "sllb"); // cm (default 10.0)
+		String sltxVal  = MapHelper.getValueFor(data, "SA", "sltx"); // code (default sand)
+		String slsatVal = MapHelper.getValueFor(data, "0.0", "slsat"); // cm3/cm3  (default 0.0)
+		String wpVal    = MapHelper.getValueOrNullFor(data, "slwp", "slll"); // cm3/cm3
+		String fcVal    = MapHelper.getValueOrNullFor(data, "slfc1", "sldul"); // cm3/cm3
+		String ksatVal	= MapHelper.getValueOrNullFor(data, "sksat"); // cm/h
+		
+		// fill in structure and convert units
+		baseDepth = Double.valueOf(sllbVal) / 100; // cm -> m
+		soilWaterContentAtSaturation = Double.valueOf(slsatVal) * 100; // cm3/cm3 -> vol%
+		
+		SoilDataCalculator sdc = null;
+		if (ksatVal != null) {
+			saturatedHydrolicConductivity = Double.valueOf(ksatVal) * 240; // cm/h -> mm/d
+		} else {
+			// derive values from lookup table based on the SLTX code
+			sdc = new SoilDataCalculator();
+			sdc.initKSatFromAgMIPCode(this, sltxVal);
+		}
+		
 		if ((wpVal != null) && (fcVal != null)) {
 			soilWaterContentAtPermanentWiltingPoint = Double.valueOf(wpVal) * 100; // cm3/cm3 -> vol%
 			soilWaterContentAtFieldCapacity = Double.valueOf(fcVal) * 100; // cm3/cm3 -> vol%
 		} else {
 			// derive values from lookup table based on the SLTX code
-			SoilDataCalculator sdc = new SoilDataCalculator();
-			String sltxCode = MapUtil.getValueOr(data, "sltx", "");
-			sdc.initFromAgMIPCode(this, sltxCode);
+			if (sdc == null) {
+				sdc = new SoilDataCalculator();
+			}
+			sdc.initSWCFromAgMIPCode(this, sltxVal);
 		}
 	}
 

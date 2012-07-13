@@ -30,18 +30,18 @@ public class Weather {
 	
 	public void from(Map data) {
 		// get the block of relevant data
-        List<BucketEntry> dataBucket = MapUtil.getBucket(data, "weather");
-        assert(dataBucket.size() == 1);
+        BucketEntry dataBucket = MapUtil.getBucket(data, "weather");
+        assert(dataBucket != null);
         
         // get the global weather station data
-    	Map<String, String> globalData = dataBucket.get(0).getValues();
+    	Map<String, String> globalData = dataBucket.getValues();
         name = MapUtil.getValueOr(globalData, "wst_name", "Unknown");
         latitude = Double.valueOf(MapUtil.getValueOr(globalData, "wst_lat", "0.0"));
         longitude = Double.valueOf(MapUtil.getValueOr(globalData, "wst_long", "0.0"));
         elevation = Double.valueOf(MapUtil.getValueOr(globalData, "elev", "0.0"));
         
         // get the daily weather station data
-        List<LinkedHashMap<String, String>> dataItems = dataBucket.get(0).getDataList();
+        List<LinkedHashMap<String, String>> dataItems = dataBucket.getDataList();
         assert(dataItems.size() > 0);
         firstDate = (String) MapUtil.getValueOr(dataItems.get(0), "w_date", "19010101");
             

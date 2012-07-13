@@ -32,11 +32,11 @@ public class Soil {
 	
 	public void from(Map data) {
 		// get the bucket of relevant data
-        List<BucketEntry> dataBucket = MapUtil.getBucket(data, "soil");
-        assert(dataBucket.size() == 1);
+        BucketEntry dataBucket = MapUtil.getBucket(data, "soil");
+        assert(dataBucket != null);
 		
         // get the global soil data
-    	Map<String, String> globalData = dataBucket.get(0).getValues();
+    	Map<String, String> globalData = dataBucket.getValues();
         id = MapUtil.getValueOr(globalData, "soil_id", "Unknown");
         name = MapUtil.getValueOr(globalData, "soil_name", "Unknown");
         latitude = Double.valueOf(MapUtil.getValueOr(globalData, "soil_lat", "0.0"));
@@ -45,7 +45,7 @@ public class Soil {
         curveNumber = Integer.valueOf(MapUtil.getValueOr(globalData, "slro", "0"));
 
         // get the soil horizons data
-        List<LinkedHashMap<String, String>> dataItems = dataBucket.get(0).getDataList();
+        List<LinkedHashMap<String, String>> dataItems = dataBucket.getDataList();
         assert(dataItems.size() > 0);
 
         horizons.clear();

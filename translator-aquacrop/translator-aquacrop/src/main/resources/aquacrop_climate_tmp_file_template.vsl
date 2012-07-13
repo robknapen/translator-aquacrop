@@ -2,7 +2,7 @@
 ## AquaCrop Climate Data - Air Temperature
 ##
 #macro(hint $val)${format.headerInt($val)}#end
-#macro(dbl $val)${format.dbl($val)}#end
+#macro(dbl $val)${format.dbl($val,8,1)}#end
 ##
 $weather.name
 

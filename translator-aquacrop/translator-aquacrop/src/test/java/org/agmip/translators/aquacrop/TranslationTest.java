@@ -29,7 +29,8 @@ public class TranslationTest extends TestCase {
 		super(testName);
 
 		try {
-			File f = new File("src/test/resources/ufga8201_mzx.json");
+			// old format: File f = new File("src/test/resources/ufga8201_mzx.json");
+			File f = new File("src/test/resources/simulation.json");
 			List<String> lines = Files.readAllLines(f.toPath(), Charset.forName("UTF-8"));
 
 			StringBuilder sb = new StringBuilder();
