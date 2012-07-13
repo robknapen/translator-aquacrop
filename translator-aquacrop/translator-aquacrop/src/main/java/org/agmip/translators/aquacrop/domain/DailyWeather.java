@@ -2,15 +2,14 @@ package org.agmip.translators.aquacrop.domain;
 
 import java.util.Map;
 
+import org.agmip.translators.aquacrop.tools.DayNumbers;
 import org.agmip.util.MapUtil;
 
 @SuppressWarnings({"rawtypes", "unchecked"}) 
 public class DailyWeather {
 
 	private String date;
-	private int day;
-	private int month;
-	private int year;
+	private int[] dayMonthYear;
 	private double minTemp;
 	private double maxTemp;
 	private double rain;
@@ -26,9 +25,7 @@ public class DailyWeather {
 	
 	public void from(Map data) {
 		date = MapUtil.getValueOr(data, "w_date", "19010101");
-        day = Integer.valueOf(date.substring(6, 8));
-        month = Integer.valueOf(date.substring(4, 6));
-        year = Integer.valueOf(date.substring(0, 4));
+		dayMonthYear = DayNumbers.decodeDateString(date);
         minTemp = Double.valueOf(MapUtil.getValueOr(data, "tmin", "12.0"));
         maxTemp = Double.valueOf(MapUtil.getValueOr(data, "tmax", "28.0"));
         rain = Double.valueOf(MapUtil.getValueOr(data, "rain", "0.0"));
@@ -44,35 +41,15 @@ public class DailyWeather {
 	public void setDate(String date) {
 		this.date = date;
 	}
+	
 
-
-	public int getDay() {
-		return day;
+	public int[] getDayMonthYear() {
+		return dayMonthYear;
 	}
 
 
-	public void setDay(int day) {
-		this.day = day;
-	}
-
-
-	public int getMonth() {
-		return month;
-	}
-
-
-	public void setMonth(int month) {
-		this.month = month;
-	}
-
-
-	public int getYear() {
-		return year;
-	}
-
-
-	public void setYear(int year) {
-		this.year = year;
+	public void setDayMonthYear(int[] dayMonthYear) {
+		this.dayMonthYear = dayMonthYear;
 	}
 
 

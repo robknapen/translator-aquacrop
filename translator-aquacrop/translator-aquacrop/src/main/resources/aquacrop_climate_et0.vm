@@ -7,9 +7,9 @@
 $weather.name
 
 #hint(1) : Daily records (1=daily, 2=10-daily and 3=monthly)
-#hint(${weather.daily.get(0).day}) : First day of record (1, 11 or 21 for 10-day or 1 for months)
-#hint(${weather.daily.get(0).month}) : First month of record
-#hint(${weather.daily.get(0).year}) : First year of record (1901 if not linked to a specific year)
+#hint(${weather.daily.get(0).dayMonthYear[0]}) : First day of record (1, 11 or 21 for 10-day or 1 for months)
+#hint(${weather.daily.get(0).dayMonthYear[1]}) : First month of record
+#hint(${weather.daily.get(0).dayMonthYear[2]}) : First year of record (1901 if not linked to a specific year)
 
   Average ETo (mm/day)
 ========================

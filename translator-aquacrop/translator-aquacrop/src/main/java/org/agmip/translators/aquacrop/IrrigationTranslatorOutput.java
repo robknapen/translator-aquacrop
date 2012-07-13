@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.agmip.core.types.TranslatorOutput;
 import org.agmip.translators.aquacrop.BaseTranslatorOutput.AquaCropFormatter;
-import org.agmip.translators.aquacrop.domain.Irrigation;
+import org.agmip.translators.aquacrop.domain.IrrigationManagement;
 import org.agmip.translators.aquacrop.domain.Soil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -16,7 +16,7 @@ public class IrrigationTranslatorOutput extends BaseTranslatorOutput implements 
 		Velocity.init();
 		VelocityContext vc = new VelocityContext();
 		
-		Irrigation irrigation = Irrigation.create(data);
+		IrrigationManagement irrigation = IrrigationManagement.create(data);
 		assert(irrigation.getEvents().size() > 0);
 		
 		vc.put("format", new AquaCropFormatter());

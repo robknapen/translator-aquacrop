@@ -11,11 +11,24 @@ public class DayNumbers {
 	private static final Calendar _calendar = new GregorianCalendar();
 
 	
+	/**
+	 * Splits the specified dateString into day, month and year values.
+	 * 
+	 * @param dateString to split
+	 * @return int[] with day, month and year value (in that order)
+	 */
+	public static int[] decodeDateString(String dateString) {
+		int dayMonthYear[] = new int[]{1, 1, 1901};
+        dayMonthYear[2] = Integer.valueOf(dateString.substring(0, 4));
+        dayMonthYear[1] = Integer.valueOf(dateString.substring(4, 6));
+        dayMonthYear[0] = Integer.valueOf(dateString.substring(6, 8));
+		return dayMonthYear;
+	}
+	
+	
 	public static int calculateDayInYear(String dateString, boolean checked) {
-        int year = Integer.valueOf(dateString.substring(0, 4));
-        int month = Integer.valueOf(dateString.substring(4, 6));
-        int day = Integer.valueOf(dateString.substring(6, 8));
-		return calculateDayInYear(day, month, year, checked);
+		int[] dmy = decodeDateString(dateString);
+		return calculateDayInYear(dmy[0], dmy[1], dmy[2], checked);
 	}
 	
 	
@@ -33,10 +46,8 @@ public class DayNumbers {
 	
 	
 	public static long calculateDayNumber(String dateString, boolean checked) {
-        int year = Integer.valueOf(dateString.substring(0, 4));
-        int month = Integer.valueOf(dateString.substring(4, 6));
-        int day = Integer.valueOf(dateString.substring(6, 8));
-		return calculateDayNumber(day, month, year, checked);
+		int[] dmy = decodeDateString(dateString);
+		return calculateDayNumber(dmy[0], dmy[1], dmy[2], checked);
 	}
 	
 	

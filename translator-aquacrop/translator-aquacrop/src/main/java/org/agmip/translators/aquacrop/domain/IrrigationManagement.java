@@ -1,6 +1,5 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,21 +9,20 @@ import org.agmip.util.MapUtil;
 import org.agmip.util.MapUtil.BucketEntry;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class Irrigation {
+public class IrrigationManagement extends Management {
 
 	private String name;
 	private String method;
 	private double percSoilSurfaceWetted;
 	private int irrigationMode;
-	private List<IrrigationEvent> events = new ArrayList<IrrigationEvent>();
 
 	
-	public static Irrigation create(Map data) {
-		Irrigation obj = new Irrigation();
+	public static IrrigationManagement create(Map data) {
+		IrrigationManagement obj = new IrrigationManagement();
 		obj.from(data);
 		return obj;
 	}
-
+	
 	
 	public void from(Map data) {
 		// get the bucket of relevant data
@@ -33,22 +31,32 @@ public class Irrigation {
 		
         // TODO get the global data
         
-        // TODO get the management events data
+        // get the management events data
         List<LinkedHashMap<String, String>> dataItems = dataBucket.getDataList();
         assert(dataItems.size() > 0);
         
         events.clear();
+        ManagementEvent startEvent = null;
+        
         for (Map<String, String> dataItem : dataItems) {
         	// create a new item
-        	IrrigationEvent item = IrrigationEvent.create(dataItem);
-        	
-        	// TODO: custom data processing
+        	ManagementEvent event = createEvent(dataItem);
         	
         	// check for planting / sowing event -> keep date as reference
-        	// check for harvesting event -> stop processing, rotations not supported (yet)
-        	// check for irrigation event -> create IrrigationEvent data from it
+        	if (event instanceof PlantingManagementEvent) {
+        		startEvent = event;
+        	}
         	
-        	events.add(item);
+        	// check for irrigation event -> create IrrigationEvent data from it
+        	if ((startEvent != null) && (event instanceof IrrigationManagementEvent)) {
+            	// TODO: custom data processing
+            	events.add(event);
+        	}
+        	
+        	// check for harvesting event -> stop processing, rotations not supported (yet)
+        	if ((startEvent != null) && (event instanceof HarvestingManagementEvent)) {
+        		break;
+        	}
         }
         
     	// TODO: global custom data processing
@@ -92,16 +100,6 @@ public class Irrigation {
 
 	public void setIrrigationMode(int irrigationMode) {
 		this.irrigationMode = irrigationMode;
-	}
-
-
-	public List<IrrigationEvent> getEvents() {
-		return events;
-	}
-
-
-	public void setEvents(List<IrrigationEvent> events) {
-		this.events = events;
 	}
 	
 }

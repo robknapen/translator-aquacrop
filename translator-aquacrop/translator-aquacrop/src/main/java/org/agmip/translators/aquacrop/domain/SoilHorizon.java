@@ -6,7 +6,7 @@ import org.agmip.translators.aquacrop.tools.MapHelper;
 import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
 
 
-@SuppressWarnings({"rawtypes", "unchecked"}) 
+@SuppressWarnings({"rawtypes"}) 
 public class SoilHorizon {
 
 	// extracted data
