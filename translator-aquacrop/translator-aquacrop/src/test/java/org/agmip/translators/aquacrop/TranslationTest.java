@@ -91,5 +91,25 @@ public class TranslationTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+
+	
+	/**
+	 * Test the translation of irrigation data
+	 */
+	public void testIrrigationTranslation() {
+		IrrigationTranslatorOutput t = new IrrigationTranslatorOutput();
+
+		try {
+			File tempFile = File.createTempFile("tmp_agmip_aquacrop_irrigation", ".irr");
+			t.writeFile(tempFile.getAbsolutePath(), inputMap);
+			
+			// TODO: Add real tests!!!
+			
+			assertTrue(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 	
 }	
