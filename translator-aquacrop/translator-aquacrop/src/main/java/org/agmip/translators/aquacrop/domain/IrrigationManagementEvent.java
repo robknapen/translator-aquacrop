@@ -20,8 +20,10 @@ public class IrrigationManagementEvent extends ManagementEvent {
 	
 	public void from(Map data) {
 		super.from(data);
-		
 		// TODO fill in specific fields
+        // "irop":"IR001", // irrigation operation (code)
+        // "irval":"13", // irrigation amount, depth of water (mm)
+        // "ireff":"1"
 	}
 
 
