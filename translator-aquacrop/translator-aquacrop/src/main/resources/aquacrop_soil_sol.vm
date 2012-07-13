@@ -1,0 +1,20 @@
+##
+## AquaCrop Soil Data - Main File
+##
+#macro(hint $val)${format.headerInt($val)}#end
+#macro(vp $val)${format.dbl($val,6,1)}#end
+#macro(dbl $val)${format.dbl($val,8,1)}#end
+#macro(dbl2 $val)${format.dbl($val,8,2)}#end
+#macro(dbl6 $val)${format.dbl($val,8,6)}#end
+##
+$soil.name
+    $aquacrop_version : AquaCrop Version
+#hint(${soil.curveNumber}) : CN (Curve Number)
+#hint(${soil.readilyEvaporatedWater}) : Readily evaporable water from top layer (mm)
+#hint(${soil.horizons.size()}) : number of soil horizons
+  -9.00 : Depth (m) of restrictive soil layer inhibiting root zone expansion - None
+ Thickness Sat     FC      WP      Ksat     CRa       CRb       Description
+ ---(m)--- ------(vol %)-------  (mm/day)  -------------------------------------------------
+#foreach($h in $soil.horizons)
+ #dbl2($h.thickness) #vp($h.soilWaterContentAtSaturation) #vp($h.soilWaterContentAtFieldCapacity) #vp($h.soilWaterContentAtPermanentWiltingPoint)  #dbl($h.saturatedHydrolicConductivity)   #dbl6($h.capillaryRiseEstimationParameterA)  #dbl6($h.capillaryRiseEstimationParameterB)  $h.description
+#end

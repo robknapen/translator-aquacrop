@@ -23,16 +23,16 @@ public class ClimateTranslatorOutput extends BaseTranslatorOutput implements Tra
 		vc.put("aquacrop_version", AQUACROP_VERSION);
 		vc.put("weather", weather);
 		
-		Template t = Velocity.getTemplate("src/main/resources/aquacrop_climate_tmp_file_template.vsl", "UTF-8");
+		Template t = Velocity.getTemplate("src/main/resources/aquacrop_climate_tmp.vm", "UTF-8");
 		int pos = file.lastIndexOf(".");
 		String temperatureFile = file.substring(0, pos) + ".tmp";
 		writeFile(vc, t, temperatureFile);
 
-		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_et0_file_template.vsl", "UTF-8");
+		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_et0.vm", "UTF-8");
 		String et0File = file.substring(0, pos) + ".et0";
 		writeFile(vc, t, et0File);
 
-		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_plu_file_template.vsl", "UTF-8");
+		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_plu.vm", "UTF-8");
 		String rainFile = file.substring(0, pos) + ".plu";
 		writeFile(vc, t, rainFile);
 
@@ -41,7 +41,7 @@ public class ClimateTranslatorOutput extends BaseTranslatorOutput implements Tra
 		vc.put("et0_file", et0File);
 		vc.put("rain_file", rainFile);
 		vc.put("co2_file", CO2_FILE_NAME);
-		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_cli_file_template.vsl", "UTF-8");
+		t = Velocity.getTemplate("src/main/resources/aquacrop_climate_cli.vm", "UTF-8");
 		writeFile(vc, t, file.substring(0, pos) + ".cli");
 	}
 }

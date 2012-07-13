@@ -10,7 +10,7 @@ import org.agmip.util.MapUtil;
 import org.agmip.util.MapUtil.BucketEntry;
 
 
-@SuppressWarnings({"rawtypes", "unchecked"}) 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class Soil {
 
 	private String id;
