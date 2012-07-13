@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.agmip.translators.aquacrop.tools.AgMIP;
 import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
 import org.agmip.util.MapUtil;
 import org.agmip.util.MapUtil.BucketEntry;
@@ -32,7 +33,7 @@ public class Soil {
 	
 	public void from(Map data) {
 		// get the bucket of relevant data
-        BucketEntry dataBucket = MapUtil.getBucket(data, "soil");
+        BucketEntry dataBucket = MapUtil.getBucket(data, AgMIP.SOIL_BUCKET_NAME);
         assert(dataBucket != null);
 		
         // get the global soil data

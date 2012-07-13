@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class IrrigationEvent {
 
+	private String event;
 	private int numberOfDaysAfterSowingOrPlanting; // int
 	private int applicationDepth; // mm
 	private double electricalConductivityOfIrrigationWater; // dS/m
@@ -19,4 +20,37 @@ public class IrrigationEvent {
 	public void from(Map data) {
 		// TODO
 	}
+
+
+	public int getNumberOfDaysAfterSowingOrPlanting() {
+		return numberOfDaysAfterSowingOrPlanting;
+	}
+
+
+	public void setNumberOfDaysAfterSowingOrPlanting(
+			int numberOfDaysAfterSowingOrPlanting) {
+		this.numberOfDaysAfterSowingOrPlanting = numberOfDaysAfterSowingOrPlanting;
+	}
+
+
+	public int getApplicationDepth() {
+		return applicationDepth;
+	}
+
+
+	public void setApplicationDepth(int applicationDepth) {
+		this.applicationDepth = applicationDepth;
+	}
+
+
+	public double getElectricalConductivityOfIrrigationWater() {
+		return electricalConductivityOfIrrigationWater;
+	}
+
+
+	public void setElectricalConductivityOfIrrigationWater(
+			double electricalConductivityOfIrrigationWater) {
+		this.electricalConductivityOfIrrigationWater = electricalConductivityOfIrrigationWater;
+	}
+	
 }

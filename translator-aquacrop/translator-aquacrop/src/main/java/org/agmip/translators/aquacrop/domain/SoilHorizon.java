@@ -55,12 +55,14 @@ public class SoilHorizon {
 		if ((wpVal != null) && (fcVal != null)) {
 			soilWaterContentAtPermanentWiltingPoint = Double.valueOf(wpVal) * 100; // cm3/cm3 -> vol%
 			soilWaterContentAtFieldCapacity = Double.valueOf(fcVal) * 100; // cm3/cm3 -> vol%
+			// TODO: update ksat?
 		} else {
 			// derive values from lookup table based on the SLTX code
 			if (sdc == null) {
 				sdc = new SoilDataCalculator();
 			}
 			sdc.initSWCFromAgMIPCode(this, sltxVal);
+			// TODO: update ksat?
 		}
 	}
 

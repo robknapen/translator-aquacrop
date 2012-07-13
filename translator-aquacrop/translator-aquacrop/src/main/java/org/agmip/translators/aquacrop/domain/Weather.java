@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.agmip.translators.aquacrop.tools.AgMIP;
 import org.agmip.translators.aquacrop.tools.DayNumbers;
 import org.agmip.translators.aquacrop.tools.WeatherDataCalculator;
 import org.agmip.util.MapUtil;
@@ -30,7 +31,7 @@ public class Weather {
 	
 	public void from(Map data) {
 		// get the block of relevant data
-        BucketEntry dataBucket = MapUtil.getBucket(data, "weather");
+        BucketEntry dataBucket = MapUtil.getBucket(data, AgMIP.WEATHER_BUCKET_NAME);
         assert(dataBucket != null);
         
         // get the global weather station data
