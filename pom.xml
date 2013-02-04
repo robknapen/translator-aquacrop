@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.agmip.translators</groupId>
         <artifactId>translator-dist</artifactId>
-        <version>0.7</version>
+        <version>1.0.1</version>
     </parent>
 
     <properties>
@@ -39,7 +39,6 @@
         <dependency>
             <groupId>org.agmip</groupId>
             <artifactId>agmip-core</artifactId>
-            <version>0.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -49,7 +48,6 @@
         <dependency>
         	<groupId>org.apache.velocity</groupId>
         	<artifactId>velocity</artifactId>
-        	<version>1.7</version>
         </dependency>
         <dependency>
         	<groupId>org.apache.velocity</groupId>

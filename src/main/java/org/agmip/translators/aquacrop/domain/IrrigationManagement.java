@@ -1,6 +1,6 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +32,7 @@ public class IrrigationManagement extends Management {
         // TODO get the global data
         
         // get the management events data
-        List<LinkedHashMap<String, String>> dataItems = dataBucket.getDataList();
+        List<HashMap<String, String>> dataItems = dataBucket.getDataList();
         assert(dataItems.size() > 0);
         
         events.clear();
