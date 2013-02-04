@@ -1,6 +1,6 @@
 package org.agmip.translators.aquacrop.tools;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.agmip.translators.aquacrop.domain.SoilHorizon;
@@ -9,7 +9,7 @@ public class SoilDataCalculator {
 	
 	private final static double SURFACE_LAYER_Z = 0.04; // meter
 
-	private Map<String, SoilLookupEntry> lookup = new LinkedHashMap<String, SoilLookupEntry>();
+	private Map<String, SoilLookupEntry> lookup = new HashMap<String, SoilLookupEntry>();
 	
 	
 	protected class SoilLookupEntry {

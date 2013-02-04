@@ -1,7 +1,7 @@
 package org.agmip.translators.aquacrop.domain;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +46,7 @@ public class Soil {
         curveNumber = Integer.valueOf(MapUtil.getValueOr(globalData, "slro", "0"));
 
         // get the soil horizons data
-        List<LinkedHashMap<String, String>> dataItems = dataBucket.getDataList();
+        List<HashMap<String, String>> dataItems = dataBucket.getDataList();
         assert(dataItems.size() > 0);
 
         horizons.clear();

@@ -1,7 +1,7 @@
 package org.agmip.translators.aquacrop.domain;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class Weather {
         elevation = Double.valueOf(MapUtil.getValueOr(globalData, "elev", "0.0"));
         
         // get the daily weather station data
-        List<LinkedHashMap<String, String>> dataItems = dataBucket.getDataList();
+        List<HashMap<String, String>> dataItems = dataBucket.getDataList();
         assert(dataItems.size() > 0);
         firstDate = (String) MapUtil.getValueOr(dataItems.get(0), "w_date", "19010101");
             
