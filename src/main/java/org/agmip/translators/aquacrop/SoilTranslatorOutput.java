@@ -15,7 +15,7 @@ public class SoilTranslatorOutput extends BaseTranslatorOutput implements Transl
 		VelocityContext vc = new VelocityContext();
 		
 		Soil soil = Soil.create(data);
-		assert(soil.getHorizons().size() > 0);
+		assert(soil.getLayers().size() > 0);
 		
 		vc.put("format", new AquaCropFormatter());
 		vc.put("aquacrop_version", AQUACROP_VERSION);

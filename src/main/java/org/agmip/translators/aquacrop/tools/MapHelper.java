@@ -1,5 +1,7 @@
 package org.agmip.translators.aquacrop.tools;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.agmip.util.MapUtil;
@@ -58,4 +60,18 @@ public class MapHelper {
 		return orValue;
 	}
 
+	
+	/**
+	 * Returns the list of maps from the data for the specified key, or an
+	 * empty list when the key is not present in the data.
+	 * 
+	 * @param data to examine
+	 * @param key to search
+	 * @return value for the key, or an empty list
+	 */
+	public static ArrayList<HashMap<String, Object>> getListOrEmptyFor(Map data, String key) {
+	    return (ArrayList<HashMap<String, Object>>) MapUtil.getObjectOr(data, key, new ArrayList<HashMap<String, Object>>());        
+	}
+	
+	
 }

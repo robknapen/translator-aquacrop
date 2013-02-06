@@ -4,15 +4,15 @@ import java.util.Map;
 
 
 @SuppressWarnings({"rawtypes"})
-public class IrrigationManagementEvent extends ManagementEvent {
+public class IrrigationEvent extends ManagementEvent {
 
 	private int numberOfDaysAfterSowingOrPlanting; // int
 	private int applicationDepth; // mm
 	private double electricalConductivityOfIrrigationWater; // dS/m
 	
 	
-	public static IrrigationManagementEvent create(Map data) {
-		IrrigationManagementEvent obj = new IrrigationManagementEvent();
+	public static IrrigationEvent create(Map data) {
+		IrrigationEvent obj = new IrrigationEvent();
 		obj.from(data);
 		return obj;
 	}

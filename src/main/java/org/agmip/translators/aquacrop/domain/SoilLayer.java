@@ -7,7 +7,7 @@ import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
 
 
 @SuppressWarnings({"rawtypes"}) 
-public class SoilHorizon {
+public class SoilLayer {
 
 	// extracted data
 	private double baseDepth; // mm
@@ -23,8 +23,8 @@ public class SoilHorizon {
 	private String description;
 	
 	
-	public static SoilHorizon create(Map data) {
-		SoilHorizon sh = new SoilHorizon();
+	public static SoilLayer create(Map data) {
+		SoilLayer sh = new SoilLayer();
 		sh.from(data);
 		return sh;
 	}

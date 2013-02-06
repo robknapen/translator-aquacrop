@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.agmip.translators.aquacrop.tools.AgMIP;
 import org.agmip.translators.aquacrop.tools.DayNumbers;
+import org.agmip.translators.aquacrop.tools.MapHelper;
 import org.agmip.translators.aquacrop.tools.WeatherDataCalculator;
 import org.agmip.util.MapUtil;
-import org.agmip.util.MapUtil.BucketEntry;
 
-@SuppressWarnings({"rawtypes", "unchecked"}) 
+@SuppressWarnings({"rawtypes"}) 
 public class Weather {
 
 	private String name;
@@ -30,24 +30,19 @@ public class Weather {
 	
 	
 	public void from(Map data) {
-		// get the block of relevant data
-        BucketEntry dataBucket = MapUtil.getBucket(data, AgMIP.WEATHER_BUCKET_NAME);
-        assert(dataBucket != null);
-        
         // get the global weather station data
-    	Map<String, String> globalData = dataBucket.getValues();
-        name = MapUtil.getValueOr(globalData, "wst_name", "Unknown");
-        latitude = Double.valueOf(MapUtil.getValueOr(globalData, "wst_lat", "0.0"));
-        longitude = Double.valueOf(MapUtil.getValueOr(globalData, "wst_long", "0.0"));
-        elevation = Double.valueOf(MapUtil.getValueOr(globalData, "elev", "0.0"));
+        name = MapUtil.getValueOr(data, "wst_name", "Unknown");
+        latitude = Double.valueOf(MapUtil.getValueOr(data, "wst_lat", "0.0"));
+        longitude = Double.valueOf(MapUtil.getValueOr(data, "wst_long", "0.0"));
+        elevation = Double.valueOf(MapUtil.getValueOr(data, "elev", "0.0"));
         
         // get the daily weather station data
-        List<HashMap<String, String>> dataItems = dataBucket.getDataList();
+        List<HashMap<String, Object>> dataItems = MapHelper.getListOrEmptyFor(data, AgMIP.WEATHERS_DAILY_LIST_NAME);
         assert(dataItems.size() > 0);
         firstDate = (String) MapUtil.getValueOr(dataItems.get(0), "w_date", "19010101");
             
         daily.clear();
-        for (Map<String, String> dataItem : dataItems) {
+        for (Map<String, Object> dataItem : dataItems) {
         	// create a new item
         	DailyWeather item = DailyWeather.create(dataItem);
         	
@@ -61,6 +56,14 @@ public class Weather {
 	}
 	
 	
+	@Override
+	public String toString() {
+		return "Weather [name=" + name + ", firstDate=" + firstDate
+				+ ", latitude=" + latitude + ", longitude=" + longitude
+				+ ", elevation=" + elevation + "]";
+	}
+
+
 	public String getName() {
 		return name;
 	}
@@ -115,9 +118,4 @@ public class Weather {
 		return daily;
 	}
 
-
-	public void setDaily(List<DailyWeather> daily) {
-		this.daily = daily;
-	}
-	
 }

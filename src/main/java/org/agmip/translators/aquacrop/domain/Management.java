@@ -17,13 +17,13 @@ public abstract class Management {
 	public ManagementEvent createEvent(Map data) {
 		String event = MapHelper.getValueFor(data, "Unknown", "event");
 		if (AgMIP.MANAGEMENT_EVENT_PLANT.equalsIgnoreCase(event)) {
-			return PlantingManagementEvent.create(data);
+			return PlantingEvent.create(data);
 		}
 		if (AgMIP.MANAGEMENT_EVENT_IRRIGATE.equalsIgnoreCase(event)) {
-			return IrrigationManagementEvent.create(data);
+			return IrrigationEvent.create(data);
 		}
 		if (AgMIP.MANAGEMENT_EVENT_HARVEST.equalsIgnoreCase(event)) {
-			return HarvestingManagementEvent.create(data);
+			return HarvestingEvent.create(data);
 		}
 		return null;
 	}

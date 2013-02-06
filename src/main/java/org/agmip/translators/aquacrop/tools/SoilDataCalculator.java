@@ -3,7 +3,7 @@ package org.agmip.translators.aquacrop.tools;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.agmip.translators.aquacrop.domain.SoilHorizon;
+import org.agmip.translators.aquacrop.domain.SoilLayer;
 
 public class SoilDataCalculator {
 	
@@ -46,7 +46,7 @@ public class SoilDataCalculator {
 	}
 
 	
-	public void initSWCFromAgMIPCode(SoilHorizon horizon, String sltxCode) {
+	public void initSWCFromAgMIPCode(SoilLayer horizon, String sltxCode) {
 		if ((horizon == null) || (sltxCode == null)) {
 			return;
 		}
@@ -65,7 +65,7 @@ public class SoilDataCalculator {
 	}
 
 	
-	public void initKSatFromAgMIPCode(SoilHorizon horizon, String sltxCode) {
+	public void initKSatFromAgMIPCode(SoilLayer horizon, String sltxCode) {
 		if ((horizon == null) || (sltxCode == null)) {
 			return;
 		}

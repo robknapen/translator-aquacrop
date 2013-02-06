@@ -29,8 +29,7 @@ public class TranslationTest extends TestCase {
 		super(testName);
 
 		try {
-			// old format: File f = new File("src/test/resources/ufga8201_mzx.json");
-			File f = new File("src/test/resources/simulation.json");
+			File f = new File("src/test/resources/json-translation-samples/mach_fast.json");
 			List<String> lines = Files.readAllLines(f.toPath(), Charset.forName("UTF-8"));
 
 			StringBuilder sb = new StringBuilder();
@@ -52,6 +51,25 @@ public class TranslationTest extends TestCase {
 		return new TestSuite(TranslationTest.class);
 	}
 
+	
+	/**
+	 * Test the translation of AgMIP experiments to an AquaCrop project 
+	 */
+	public void testProjectTranslation() {
+		AquaCropProjectOutput tx = new AquaCropProjectOutput();
+		try {
+			File tempFile = File.createTempFile("agmip_aquacrop", ".prj");
+			tx.writeFile(tempFile.getAbsolutePath(), inputMap);
+			
+			// TODO: Add real tests!!!
+			
+			assertTrue(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
 	
 	/**
 	 * Test the translation of weather data

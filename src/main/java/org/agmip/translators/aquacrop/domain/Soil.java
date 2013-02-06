@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.agmip.translators.aquacrop.tools.AgMIP;
+import org.agmip.translators.aquacrop.tools.MapHelper;
 import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
 import org.agmip.util.MapUtil;
-import org.agmip.util.MapUtil.BucketEntry;
 
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes"})
 public class Soil {
 
 	private String id;
@@ -21,7 +21,7 @@ public class Soil {
 	private String classification;
 	private int curveNumber;
 	private int readilyEvaporatedWater;
-	private List<SoilHorizon> horizons = new ArrayList<SoilHorizon>();
+	private List<SoilLayer> layers = new ArrayList<SoilLayer>();
 
 	
 	public static Soil create(Map data) {
@@ -32,28 +32,20 @@ public class Soil {
 	
 	
 	public void from(Map data) {
-		// get the bucket of relevant data
-        BucketEntry dataBucket = MapUtil.getBucket(data, AgMIP.SOIL_BUCKET_NAME);
-        assert(dataBucket != null);
-		
         // get the global soil data
-    	Map<String, String> globalData = dataBucket.getValues();
-        id = MapUtil.getValueOr(globalData, "soil_id", "Unknown");
-        name = MapUtil.getValueOr(globalData, "soil_name", "Unknown");
-        latitude = Double.valueOf(MapUtil.getValueOr(globalData, "soil_lat", "0.0"));
-        longitude = Double.valueOf(MapUtil.getValueOr(globalData, "soil_long", "0.0"));
-        classification = MapUtil.getValueOr(globalData, "classification", "Unknown");
-        curveNumber = Integer.valueOf(MapUtil.getValueOr(globalData, "slro", "0"));
+        id = MapUtil.getValueOr(data, "soil_id", "Unknown");
+        name = MapUtil.getValueOr(data, "soil_name", "Unknown");
+        latitude = Double.valueOf(MapUtil.getValueOr(data, "soil_lat", "0.0"));
+        longitude = Double.valueOf(MapUtil.getValueOr(data, "soil_long", "0.0"));
+        classification = MapUtil.getValueOr(data, "classification", "Unknown");
+        curveNumber = Integer.valueOf(MapUtil.getValueOr(data, "slro", "0"));
 
-        // get the soil horizons data
-        List<HashMap<String, String>> dataItems = dataBucket.getDataList();
-        assert(dataItems.size() > 0);
-
-        horizons.clear();
+        // extract the soil layers
+        layers.clear();
         double previousSoilLayerBaseDepth = 0.0;
-        for (Map<String, String> dataItem : dataItems) {
+        for (HashMap<String, Object> soilLayerData : MapHelper.getListOrEmptyFor(data, AgMIP.SOILS_LAYERS_LIST_NAME)) {
         	// create a new item
-        	SoilHorizon item = SoilHorizon.create(dataItem);
+        	SoilLayer item = SoilLayer.create(soilLayerData);
         	
         	// fill in derived data
         	item.setThickness(item.getSoilLayerBaseDepth() - previousSoilLayerBaseDepth);
@@ -76,17 +68,24 @@ public class Soil {
         					soilClass, item.getSaturatedHydrolicConductivity()));
         	
         	// store it
-        	horizons.add(item);
+        	layers.add(item);
         }
         
         // TODO: reduce number of soil layers to a max of 5
         // repeatedly take average of last two until at 5 layers or less
         
         // calculate readilyEvaporatedWater from top soil horizon
-        SoilHorizon top = horizons.get(0);
+        SoilLayer top = layers.get(0);
         readilyEvaporatedWater = (int)SoilDataCalculator.calculateReadilyEvaporableWater(
         		top.getSoilWaterContentAtFieldCapacity(),
         		top.getSoilWaterContentAtPermanentWiltingPoint());
+	}
+	
+
+	@Override
+	public String toString() {
+		return "Soil [id=" + id + ", name=" + name + ", latitude=" + latitude
+				+ ", longitude=" + longitude + "]";
 	}
 
 
@@ -120,13 +119,8 @@ public class Soil {
 	}
 
 
-	public List<SoilHorizon> getHorizons() {
-		return horizons;
-	}
-
-
-	public void setHorizons(List<SoilHorizon> horizons) {
-		this.horizons = horizons;
+	public List<SoilLayer> getLayers() {
+		return layers;
 	}
 
 

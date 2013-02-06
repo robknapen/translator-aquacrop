@@ -43,18 +43,18 @@ public class IrrigationManagement extends Management {
         	ManagementEvent event = createEvent(dataItem);
         	
         	// check for planting / sowing event -> keep date as reference
-        	if (event instanceof PlantingManagementEvent) {
+        	if (event instanceof PlantingEvent) {
         		startEvent = event;
         	}
         	
         	// check for irrigation event -> create IrrigationEvent data from it
-        	if ((startEvent != null) && (event instanceof IrrigationManagementEvent)) {
+        	if ((startEvent != null) && (event instanceof IrrigationEvent)) {
             	// TODO: custom data processing
             	events.add(event);
         	}
         	
         	// check for harvesting event -> stop processing, rotations not supported (yet)
-        	if ((startEvent != null) && (event instanceof HarvestingManagementEvent)) {
+        	if ((startEvent != null) && (event instanceof HarvestingEvent)) {
         		break;
         	}
         }
