@@ -25,7 +25,7 @@ public class IrrigationEvent extends ManagementEvent {
         // "irval":"13", // irrigation amount, depth of water (mm)
         // "ireff":"1"
 	}
-
+	
 
 	public int getNumberOfDaysAfterSowingOrPlanting() {
 		return numberOfDaysAfterSowingOrPlanting;

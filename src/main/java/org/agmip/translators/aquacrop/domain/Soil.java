@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIP;
-import org.agmip.translators.aquacrop.tools.MapHelper;
-import org.agmip.translators.aquacrop.tools.SoilDataCalculator;
+import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
+import org.agmip.translators.aquacrop.tools.SoilFunctions;
 import org.agmip.util.MapUtil;
 
 
@@ -43,7 +42,7 @@ public class Soil {
         // extract the soil layers
         layers.clear();
         double previousSoilLayerBaseDepth = 0.0;
-        for (HashMap<String, Object> soilLayerData : MapHelper.getListOrEmptyFor(data, AgMIP.SOILS_LAYERS_LIST_NAME)) {
+        for (HashMap<String, Object> soilLayerData : AgMIPFunctions.getListOrEmptyFor(data, AgMIPFunctions.SOILS_LAYERS_LIST_NAME)) {
         	// create a new item
         	SoilLayer item = SoilLayer.create(soilLayerData);
         	
@@ -51,20 +50,20 @@ public class Soil {
         	item.setThickness(item.getSoilLayerBaseDepth() - previousSoilLayerBaseDepth);
         	previousSoilLayerBaseDepth = item.getSoilLayerBaseDepth();
         	
-        	int soilClass = SoilDataCalculator.calculateSoilClass(
+        	int soilClass = SoilFunctions.calculateSoilClass(
         			item.getSoilWaterContentAtSaturation(), 
         			item.getSoilWaterContentAtPermanentWiltingPoint(), 
         			item.getSoilWaterContentAtFieldCapacity(), 
         			item.getSaturatedHydrolicConductivity());
         	
-        	item.setDescription(SoilDataCalculator.soilClassDescription(soilClass));
+        	item.setDescription(SoilFunctions.soilClassDescription(soilClass));
         	
         	item.setCapillaryRiseEstimationParameterA(
-        			SoilDataCalculator.calculateCapillaryRiseEstimationParameterA(
+        			SoilFunctions.calculateCapillaryRiseEstimationParameterA(
         					soilClass, item.getSaturatedHydrolicConductivity()));
         	
         	item.setCapillaryRiseEstimationParameterB(
-        			SoilDataCalculator.calculateCapillaryRiseEstimationParameterB(
+        			SoilFunctions.calculateCapillaryRiseEstimationParameterB(
         					soilClass, item.getSaturatedHydrolicConductivity()));
         	
         	// store it
@@ -76,7 +75,7 @@ public class Soil {
         
         // calculate readilyEvaporatedWater from top soil horizon
         SoilLayer top = layers.get(0);
-        readilyEvaporatedWater = (int)SoilDataCalculator.calculateReadilyEvaporableWater(
+        readilyEvaporatedWater = (int)SoilFunctions.calculateReadilyEvaporableWater(
         		top.getSoilWaterContentAtFieldCapacity(),
         		top.getSoilWaterContentAtPermanentWiltingPoint());
 	}

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.agmip.translators.aquacrop.domain.SoilLayer;
 
-public class SoilDataCalculator {
+public class SoilFunctions {
 	
 	private final static double SURFACE_LAYER_Z = 0.04; // meter
 
@@ -29,7 +29,7 @@ public class SoilDataCalculator {
 	}
 	
 	
-	public SoilDataCalculator() {
+	public SoilFunctions() {
 		// set up the lookup table
 		lookup.put("CSA,FSA,SA,VFSA", new SoilLookupEntry("Sand", 36.0, 13.0, 6.0, 1500.0));
 		lookup.put("CLOSA,FLOSA,LOSA,VFLOS", new SoilLookupEntry("Loamy sand", 38.0, 16.0, 8.0, 800.0));

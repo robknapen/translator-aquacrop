@@ -4,7 +4,7 @@
 #macro(hint $val)${format.headerInt($val)}#end
 #macro(dbl $val)${format.dbl($val,8,1)}#end
 ##
-$weather.name
+$weather.weatherStationId - $weather.name
 
 #hint(1) : Daily records (1=daily, 2=10-daily and 3=monthly)
 #hint(${weather.daily.get(0).dayMonthYear[0]}) : First day of record (1, 11 or 21 for 10-day or 1 for months)

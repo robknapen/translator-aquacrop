@@ -1,7 +1,7 @@
 package org.agmip.translators.aquacrop.tools;
 
 
-public class WeatherDataCalculator {
+public class WeatherFunctions {
 
 	/**
 	 * Calculate ET reference.

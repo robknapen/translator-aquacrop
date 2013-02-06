@@ -1,7 +1,7 @@
 ##
 ## AquaCrop Climate Data - Main File
 ##
-$weather.name
+$weather.weatherStationId - $weather.name
 $aquacrop_version : AquaCrop Version
 $temp_file
 $et0_file

@@ -2,8 +2,8 @@ package org.agmip.translators.aquacrop.domain;
 
 import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.DayNumbers;
-import org.agmip.translators.aquacrop.tools.MapHelper;
+import org.agmip.translators.aquacrop.tools.DateFunctions;
+import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 
 
 @SuppressWarnings({"rawtypes"})
@@ -15,9 +15,9 @@ public class ManagementEvent {
 
 	
 	public void from(Map data) {
-		event = MapHelper.getValueFor(data, "Unknown", "event");
-		date = MapHelper.getValueFor(data, "190101", "date");
-		dayMonthYear = DayNumbers.decodeDateString(date);
+		event = AgMIPFunctions.getValueFor(data, "Unknown", "event");
+		date = AgMIPFunctions.getValueFor(data, "190101", "date");
+		dayMonthYear = DateFunctions.decodeDateString(date);
 	}
 	
 	

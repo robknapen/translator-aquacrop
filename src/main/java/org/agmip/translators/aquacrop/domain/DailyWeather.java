@@ -2,10 +2,10 @@ package org.agmip.translators.aquacrop.domain;
 
 import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.DayNumbers;
+import org.agmip.translators.aquacrop.tools.DateFunctions;
 import org.agmip.util.MapUtil;
 
-@SuppressWarnings({"rawtypes", "unchecked"}) 
+@SuppressWarnings({"rawtypes"}) 
 public class DailyWeather {
 
 	private String date;
@@ -25,7 +25,7 @@ public class DailyWeather {
 	
 	public void from(Map data) {
 		date = MapUtil.getValueOr(data, "w_date", "19010101");
-		dayMonthYear = DayNumbers.decodeDateString(date);
+		dayMonthYear = DateFunctions.decodeDateString(date);
         minTemp = Double.valueOf(MapUtil.getValueOr(data, "tmin", "12.0"));
         maxTemp = Double.valueOf(MapUtil.getValueOr(data, "tmax", "28.0"));
         rain = Double.valueOf(MapUtil.getValueOr(data, "rain", "0.0"));

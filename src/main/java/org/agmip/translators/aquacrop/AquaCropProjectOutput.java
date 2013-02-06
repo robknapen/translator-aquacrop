@@ -41,19 +41,19 @@ public class AquaCropProjectOutput extends BaseTranslatorOutput implements Trans
 	// Get cropping season length (in calendar days) from filename (encoded)
 	// Use cropping season length to set harvesting data (in AquaCrop project file)
 	
-	// Data can have multi experiments (experiments bucket) or only a single experiment (no experiments bucket)
+	// Data can have multiple experiments (experiments bucket) or only a single experiment (no experiments bucket)
 	// {experiment[].}management.events
 	// management.events[] can contain multiple planting events 
     
     // TODO: Process all soils
     // TODO: Process all weathers
     // TODO: Select soil for each experiment based on specified soil id
-    
+    // TODO: Select climate for each experiment based on specified weather station id
 	
 	@SuppressWarnings("rawtypes")
 	public void writeFile(String file, Map data) throws IOException {
 		
-		LOG.debug("Creating input files for AquaCrop model from AgMIP data ...");
+		LOG.debug("Creating project input files for AquaCrop model from AgMIP data ...");
 		
 		Velocity.init();
 		VelocityContext vc = new VelocityContext();

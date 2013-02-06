@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIP;
-import org.agmip.translators.aquacrop.tools.MapHelper;
+import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 import org.agmip.util.MapUtil;
 
 /**
@@ -55,12 +54,12 @@ public class Experiment {
         fieldNotes = MapUtil.getValueOr(data, "fl_notes", "");
         
 		// get the bucket of relevant data
-		Map<String, Object> bucket = MapUtil.getRawBucket(data, AgMIP.MANAGEMENT_BUCKET_NAME);
+		Map<String, Object> bucket = MapUtil.getRawBucket(data, AgMIPFunctions.MANAGEMENT_BUCKET_NAME);
         assert(bucket != null);
 
         // extract the management events
         events.clear();
-        for (HashMap<String, Object> eventData : MapHelper.getListOrEmptyFor(bucket, AgMIP.MANAGEMENT_EVENTS_LIST_NAME)) {
+        for (HashMap<String, Object> eventData : AgMIPFunctions.getListOrEmptyFor(bucket, AgMIPFunctions.MANAGEMENT_EVENTS_LIST_NAME)) {
         	ManagementEvent event = createEvent(eventData);
         	if (event != null) {
 	        	events.add(event);
@@ -75,17 +74,26 @@ public class Experiment {
 				+ ", fieldLatitude=" + fieldLatitude + ", fieldLongitude="
 				+ fieldLongitude + "]";
 	}
+	
+	
+	public String getId() {
+		String name = getName();
+		if (name != null) {
+			name = name.replaceAll(" ", "-");
+		}
+		return name;
+	}
 
 
 	public ManagementEvent createEvent(Map data) {
-		String event = MapHelper.getValueFor(data, "Unknown", "event");
-		if (AgMIP.MANAGEMENT_EVENT_PLANT.equalsIgnoreCase(event)) {
+		String event = AgMIPFunctions.getValueFor(data, "Unknown", "event");
+		if (AgMIPFunctions.MANAGEMENT_EVENT_PLANT.equalsIgnoreCase(event)) {
 			return PlantingEvent.create(data);
 		}
-		if (AgMIP.MANAGEMENT_EVENT_IRRIGATE.equalsIgnoreCase(event)) {
+		if (AgMIPFunctions.MANAGEMENT_EVENT_IRRIGATE.equalsIgnoreCase(event)) {
 			return IrrigationEvent.create(data);
 		}
-		if (AgMIP.MANAGEMENT_EVENT_HARVEST.equalsIgnoreCase(event)) {
+		if (AgMIPFunctions.MANAGEMENT_EVENT_HARVEST.equalsIgnoreCase(event)) {
 			return HarvestingEvent.create(data);
 		}
 		return null;
@@ -100,6 +108,22 @@ public class Experiment {
 			}
 		}
 		return result;
+	}
+	
+	
+	public List<IrrigationEvent> getIrrigationEvents() {
+		ArrayList<IrrigationEvent> result = new ArrayList<IrrigationEvent>();
+		for (ManagementEvent event : events) {
+			if (event instanceof IrrigationEvent) {
+				result.add((IrrigationEvent)event);
+			}
+		}
+		return result;
+	}
+	
+	
+	public Irrigation getIrrigation() {
+		return Irrigation.create(events);
 	}
 	
 

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIP;
+import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 import org.agmip.util.MapUtil;
 
 /**
@@ -29,7 +29,7 @@ public class Experiments {
 	@SuppressWarnings("unchecked")
 	public void from(Map data) {
 		// get the bucket of relevant data
-		ArrayList<HashMap<String, Object>> dataItems = MapUtil.getRawPackageContents(data, AgMIP.EXPERIMENTS_BUCKET_NAME);
+		ArrayList<HashMap<String, Object>> dataItems = MapUtil.getRawPackageContents(data, AgMIPFunctions.EXPERIMENTS_BUCKET_NAME);
         assert(dataItems != null);
 
         items.clear();

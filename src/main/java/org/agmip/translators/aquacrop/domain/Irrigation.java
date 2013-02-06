@@ -1,46 +1,47 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIP;
-import org.agmip.util.MapUtil;
-import org.agmip.util.MapUtil.BucketEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class IrrigationManagement extends Management {
 
+/**
+ * Creates irrigation data usable as input for the AquaCrop model, from
+ * AgMIP management event data. The specified management events are
+ * validated. 
+ * 
+ * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ */
+public class Irrigation {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Irrigation.class);	
+	
 	private String name;
 	private String method;
 	private double percSoilSurfaceWetted;
 	private int irrigationMode;
 
+	private List<IrrigationEvent> items = new ArrayList<IrrigationEvent>();
 	
-	public static IrrigationManagement create(Map data) {
-		IrrigationManagement obj = new IrrigationManagement();
-		obj.from(data);
+	
+	public static Irrigation create(List<ManagementEvent> events) {
+		Irrigation obj = new Irrigation();
+		obj.from(events);
 		return obj;
 	}
 	
 	
-	public void from(Map data) {
-		// get the bucket of relevant data
-        BucketEntry dataBucket = MapUtil.getBucket(data, AgMIP.MANAGEMENT_BUCKET_NAME);
-        assert(dataBucket != null);
-		
-        // TODO get the global data
+	public void from(List<ManagementEvent> managementEvents) {
+
+		// TODO get the global data
+		LOG.error("Het ging niet goed");
         
-        // get the management events data
-        List<HashMap<String, String>> dataItems = dataBucket.getDataList();
-        assert(dataItems.size() > 0);
-        
-        events.clear();
+        items.clear();
         ManagementEvent startEvent = null;
         
-        for (Map<String, String> dataItem : dataItems) {
-        	// create a new item
-        	ManagementEvent event = createEvent(dataItem);
+        for (ManagementEvent event : managementEvents) {
         	
         	// check for planting / sowing event -> keep date as reference
         	if (event instanceof PlantingEvent) {
@@ -50,7 +51,7 @@ public class IrrigationManagement extends Management {
         	// check for irrigation event -> create IrrigationEvent data from it
         	if ((startEvent != null) && (event instanceof IrrigationEvent)) {
             	// TODO: custom data processing
-            	events.add(event);
+            	items.add((IrrigationEvent)event);
         	}
         	
         	// check for harvesting event -> stop processing, rotations not supported (yet)
@@ -100,6 +101,11 @@ public class IrrigationManagement extends Management {
 
 	public void setIrrigationMode(int irrigationMode) {
 		this.irrigationMode = irrigationMode;
+	}
+
+
+	public List<IrrigationEvent> getItems() {
+		return items;
 	}
 	
 }

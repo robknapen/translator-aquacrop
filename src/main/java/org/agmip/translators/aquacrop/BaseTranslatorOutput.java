@@ -9,7 +9,13 @@ import java.nio.charset.Charset;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
-
+/**
+ * Base class for the AquaCrop AgMIP data output translators. These create
+ * model input data from the data extracted from the AgMIP database.
+ * 
+ * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ * @author Dirk Raes, Leuven University, Belgium
+ */
 public class BaseTranslatorOutput {
 
 	public final static String AQUACROP_VERSION = "4.0";
