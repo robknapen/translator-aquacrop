@@ -3,35 +3,21 @@
 ##
 #macro(hint $val)${format.headerInt($val)}#end
 #macro(vp $val)${format.dbl($val,6,1)}#end
+#macro(int $val)${format.num($val,8)}#end
 #macro(dbl $val)${format.dbl($val,8,1)}#end
+#macro(dbl0 $val)${format.dbl($val,8,0)}#end
 #macro(dbl2 $val)${format.dbl($val,8,2)}#end
 #macro(dbl6 $val)${format.dbl($val,8,6)}#end
 ##
-#*
-given irrigation schedule
-   4.0   : AquaCrop Version (June 2012)
-   1     : Sprinkler irrigation
- 100     : Percentage of soil surface wetted by irrigation
-   1     : Irrigation schedule
-
-   Day    Depth (mm)   ECw (dS/m)
-====================================
-    10        50          1.0
-    20        50          1.0
-    30        50          1.0
-    40        50          1.2
-    50        50          1.4
-    60        50          1.6
-    80        50          1.8
-*#
 $irrigation.name
     $aquacrop_version : AquaCrop Version
 #hint(${irrigation.irrigationMethod}) : ${irrigation.method}
 #hint(${irrigation.percSoilSurfaceWetted}) : Percentage of soil surface wetted by irrigation
-#hint(1) : Irrigation schedule
+    1 : Irrigation schedule
 
    Day    Depth (mm)   ECw (dS/m)
 ====================================
 #foreach($h in $irrigation.items)
- #dbl2($h.numberOfDaysAfterSowingOrPlanting) #vp($h.applicationDepth) #dbl($h.electricalConductivityOfIrrigationWater)
+ #dbl0($h.numberOfDaysAfterSowingOrPlanting) #dbl0($h.applicationDepth) #dbl($h.electricalConductivityOfIrrigationWater)
+ 
 #end

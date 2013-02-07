@@ -17,6 +17,7 @@ import org.agmip.util.JSONAdapter;
  */
 public class TranslationTest extends TestCase {
 
+	@SuppressWarnings("rawtypes")
 	private Map inputMap;
 
 	/**
@@ -29,7 +30,7 @@ public class TranslationTest extends TestCase {
 		super(testName);
 
 		try {
-			File f = new File("src/test/resources/json-translation-samples/mach_fast.json");
+			File f = new File("src/test/resources/json-translation-samples/fields_short.json");
 			List<String> lines = Files.readAllLines(f.toPath(), Charset.forName("UTF-8"));
 
 			StringBuilder sb = new StringBuilder();

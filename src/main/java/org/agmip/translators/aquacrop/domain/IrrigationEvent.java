@@ -10,7 +10,7 @@ import org.agmip.util.MapUtil;
 public class IrrigationEvent extends ManagementEvent {
 
 	private String iropCode; // AgMIP irop code
-	private int applicationDepth; // mm
+	private double applicationDepth; // mm
 	private int irrigationMethod; // aquacrop code
 	private double electricalConductivityOfIrrigationWater; // dS/m
 	private int numberOfDaysAfterSowingOrPlanting; // int
@@ -26,9 +26,9 @@ public class IrrigationEvent extends ManagementEvent {
 	public void from(Map data) {
 		super.from(data);
 		
-		applicationDepth = Integer.valueOf(MapUtil.getValueOr(data, "irval", "0.0"));
+		applicationDepth = Double.valueOf(MapUtil.getValueOr(data, "irval", "0.0"));
 		
-		iropCode = MapUtil.getValueOr(data, "irop", null);
+		iropCode = MapUtil.getValueOr(data, "irop", "");
 		irrigationMethod = new IrrigationFunctions().lookUpAquaCropIrrigationCode(iropCode);
 
 		// currently not available in AgMIP, set to default
@@ -61,12 +61,12 @@ public class IrrigationEvent extends ManagementEvent {
 	}
 
 
-	public int getApplicationDepth() {
+	public double getApplicationDepth() {
 		return applicationDepth;
 	}
 
 
-	public void setApplicationDepth(int applicationDepth) {
+	public void setApplicationDepth(double applicationDepth) {
 		this.applicationDepth = applicationDepth;
 	}
 

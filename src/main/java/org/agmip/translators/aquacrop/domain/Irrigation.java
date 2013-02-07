@@ -22,7 +22,7 @@ public class Irrigation {
 	
 	private String name;
 	private String method;
-	private double percSoilSurfaceWetted;
+	private int percSoilSurfaceWetted;
 	private String iropCode;
 	private int irrigationMethod;
 	private long startDayNumber;
@@ -104,11 +104,11 @@ public class Irrigation {
         	if (info != null) {
 	        	percSoilSurfaceWetted = info.soilSurfaceWettedPerc;
 	        	method = info.description + " (" + info.units + ")";
-	        	name = info.agmipCode + " : " + method;
+	        	name = info.agmipCode + " - " + method;
         	} else {
         		percSoilSurfaceWetted = 100;
         		method = "Unknow irrigation method";
-        		name = "Udefined : " + method;
+        		name = "Udefined - " + method;
         	}
         }
         
@@ -136,12 +136,12 @@ public class Irrigation {
 	}
 
 
-	public double getPercSoilSurfaceWetted() {
+	public int getPercSoilSurfaceWetted() {
 		return percSoilSurfaceWetted;
 	}
 
 
-	public void setPercSoilSurfaceWetted(double percSoilSurfaceWetted) {
+	public void setPercSoilSurfaceWetted(int percSoilSurfaceWetted) {
 		this.percSoilSurfaceWetted = percSoilSurfaceWetted;
 	}
 

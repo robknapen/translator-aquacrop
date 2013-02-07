@@ -26,6 +26,11 @@ public class BaseTranslatorOutput {
 			return String.format("%7s", String.valueOf(val));
 		}
 		
+		public String num(int val, int size) {
+			String frm = String.format("%%%d", size);
+			return String.format(frm, val);
+		}
+		
 		public String dbl(double val, int size, int decimals) {
 			String frm = String.format("%%%d.%df", size, decimals);
 			return String.format(frm, val);
