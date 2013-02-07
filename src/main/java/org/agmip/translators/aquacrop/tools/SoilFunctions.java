@@ -5,6 +5,11 @@ import java.util.Map;
 
 import org.agmip.translators.aquacrop.domain.SoilLayer;
 
+/**
+ * Support functions for the mapping of AgMIP to AquaCrop soil data.
+ * 
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
+ */
 public class SoilFunctions {
 	
 	private final static double SURFACE_LAYER_Z = 0.04; // meter

@@ -3,6 +3,12 @@ package org.agmip.translators.aquacrop.tools;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * Support functions for the mapping of AgMIP to AquaCrop data, related to
+ * date conversions.
+ * 
+ * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ */
 public class DateFunctions {
 
 	private static final double ELAPSED_DAYS[] = { 0.0, 31.0, 59.25, 90.25,

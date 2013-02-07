@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * the files created and should be used to related climate files to AgMIP
  * experiments.
  * 
- * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  * @author Dirk Raes, Leuven University, Belgium
  */
 public class ClimateTranslatorOutput extends BaseTranslatorOutput implements TranslatorOutput {

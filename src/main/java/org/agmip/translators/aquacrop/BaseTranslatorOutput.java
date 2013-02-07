@@ -8,19 +8,27 @@ import java.nio.charset.Charset;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for the AquaCrop AgMIP data output translators. These create
  * model input data from the data extracted from the AgMIP database.
  * 
- * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  * @author Dirk Raes, Leuven University, Belgium
  */
 public class BaseTranslatorOutput {
 
+	// logger for this translator
+    private static final Logger LOG = LoggerFactory.getLogger(BaseTranslatorOutput.class);
+	
 	public final static String AQUACROP_VERSION = "4.0";
 	
-	
+
+	/**
+	 * Formatting methods for used with Velocity.
+	 */
 	public class AquaCropFormatter {
 		public String headerInt(int val) {
 			return String.format("%7s", String.valueOf(val));
@@ -46,10 +54,10 @@ public class BaseTranslatorOutput {
     		template.merge(context, bw);
             bw.flush();
             bw.close();
-            System.out.println("Created output file: " + file);
+			LOG.info("Created file: " + file);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Could not create output file: " + e.getMessage());
+			LOG.error("Could not create file, error: " + e.getMessage());
 		}
 	}
 }

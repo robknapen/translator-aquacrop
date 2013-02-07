@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * input files for the AquaCrop model. The experiment id will be added to
  * the file name for cross referencing.
  * 
- * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  * @author Dirk Raes, Leuven University, Belgium
  */
 public class IrrigationTranslatorOutput extends BaseTranslatorOutput implements TranslatorOutput {

@@ -5,6 +5,11 @@ import java.util.Map;
 import org.agmip.translators.aquacrop.tools.DateFunctions;
 import org.agmip.util.MapUtil;
 
+/**
+ * Daily weather data relevant for AquaCrop, extracted from AgMIP data.
+ * 
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
+ */
 @SuppressWarnings({"rawtypes"}) 
 public class DailyWeather {
 

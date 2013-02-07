@@ -3,6 +3,11 @@ package org.agmip.translators.aquacrop.tools;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Support functions for the mapping of AgMIP to AquaCrop irrigation data.
+ * 
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
+ */
 public class IrrigationFunctions {
 
 	// lookup table

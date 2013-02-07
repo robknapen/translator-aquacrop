@@ -1,6 +1,11 @@
 package org.agmip.translators.aquacrop.tools;
 
 
+/**
+ * Support functions for the mapping of AgMIP to AquaCrop weather data.
+ * 
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
+ */
 public class WeatherFunctions {
 
 	/**

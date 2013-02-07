@@ -139,14 +139,26 @@ public class Experiment {
 	
 	
 	/**
-	 * Creates and irrigation instance of the management events in the
+	 * Creates an Irrigation instance from the management events in the
 	 * experiment. if the events can not be parsed into usable input for
 	 * the model the method will return null.
 	 * 
-	 * @return irrigation instance or null
+	 * @return Irrigation instance or null
 	 */
 	public Irrigation getIrrigation() {
 		return Irrigation.create(events);
+	}
+	
+	
+	/**
+	 * Creates a FieldManagement instance from the management events in the
+	 * experiment. if the events can not be parsed into usable input for
+	 * the model the method will return null.
+	 * 
+	 * @return FieldManagement instance or null
+	 */
+	public FieldManagement getFieldManagement() {
+		return FieldManagement.create(events);
 	}
 	
 

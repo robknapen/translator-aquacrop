@@ -10,6 +10,11 @@ import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 import org.agmip.translators.aquacrop.tools.WeatherFunctions;
 import org.agmip.util.MapUtil;
 
+/**
+ * Weather data relevant for AquaCrop, extracted from AgMIP data.
+ * 
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
+ */
 @SuppressWarnings({"rawtypes"}) 
 public class Weather {
 

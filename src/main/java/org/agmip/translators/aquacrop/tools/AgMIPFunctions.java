@@ -6,6 +6,11 @@ import java.util.Map;
 
 import org.agmip.util.MapUtil;
 
+/**
+ * Generic support functions for the mapping of AgMIP to AquaCrop data.
+ * 
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
+ */
 @SuppressWarnings({"rawtypes", "unchecked"}) 
 public class AgMIPFunctions {
 

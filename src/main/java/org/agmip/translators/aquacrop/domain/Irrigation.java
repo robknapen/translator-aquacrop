@@ -8,13 +8,12 @@ import org.agmip.translators.aquacrop.tools.IrrigationFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Creates irrigation data usable as input for the AquaCrop model, from
  * AgMIP management event data. The specified management events are
  * validated. 
  * 
- * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
 public class Irrigation {
 

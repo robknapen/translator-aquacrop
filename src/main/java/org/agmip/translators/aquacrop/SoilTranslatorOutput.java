@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * This translator takes the AgMIP soils data and creates a soil file for
  * the AquaCrop model.
  * 
- * @author Rob Knapen, Alterra Wageningen-UR, The Netherlands
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  * @author Dirk Raes, Leuven University, Belgium
  */
 public class SoilTranslatorOutput extends BaseTranslatorOutput implements TranslatorOutput {

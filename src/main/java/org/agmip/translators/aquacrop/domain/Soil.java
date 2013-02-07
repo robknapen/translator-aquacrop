@@ -9,7 +9,11 @@ import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 import org.agmip.translators.aquacrop.tools.SoilFunctions;
 import org.agmip.util.MapUtil;
 
-
+/**
+ * Soil data relevant for AquaCrop, extracted from AgMIP data.
+ * 
+ * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
+ */
 @SuppressWarnings({"rawtypes"})
 public class Soil {
 
