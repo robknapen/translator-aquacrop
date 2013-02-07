@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 import org.agmip.util.MapUtil;
+import org.agmip.util.MapUtil.BucketEntry;
 
 /**
  * Data for a single AgMIP crop experiment.
@@ -120,6 +121,45 @@ public class Experiment {
 		}
 		return result;
 	}
+	
+	
+	/**
+     * Method to extract management events from the json-String data, sorted
+     * in a HashMap with as key the different class types and a list of the 
+     * management event. In some cases it will be only one event, for example,
+     * sowing, but in other cases it can be many events (irrigation, 
+     * fertilization).
+     *
+     * @param data
+     * @return HashMap of created events
+     */
+     public Map<Class, List<ManagementEvent>> createEvents (Map<String, Object> data) {
+            Map<Class, List<ManagementEvent>> resultSet = new HashMap<Class, List<ManagementEvent>>();
+
+        // get the bucket of relevant data
+        BucketEntry dataBucket = MapUtil.getBucket(data, AgMIPFunctions.MANAGEMENT_BUCKET_NAME);
+        assert(dataBucket != null);
+          
+		// get the management events data
+		List<HashMap<String, String>> dataItems = dataBucket.getDataList();
+		assert(dataItems.size() > 0);
+      
+		for (Map<String, String> dataItem : dataItems) {
+			// create a new item
+			ManagementEvent event = createEvent(dataItem);
+		       
+			if (resultSet.containsKey(event.getClass())) {
+			   List<ManagementEvent> magSet = resultSet.get(event.getClass());
+			   magSet.add(event);
+			} else {
+			   List<ManagementEvent> newMagSet = new ArrayList<ManagementEvent>();
+			   newMagSet.add(event);
+			   resultSet.put(event.getClass(), newMagSet);
+			}
+		}
+     
+        return resultSet;
+     }	
 	
 	
 	/**
