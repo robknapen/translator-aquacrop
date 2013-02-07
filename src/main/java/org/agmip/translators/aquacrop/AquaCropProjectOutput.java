@@ -83,7 +83,7 @@ public class AquaCropProjectOutput extends BaseTranslatorOutput implements Trans
 		/// process the experiments
 		for (Experiment experiment : experiments.getItems()) {
 			LOG.debug(experiment.toString());
-			List<PlantingEvent> events = experiment.getPlantingEvents();
+			List<PlantingEvent> events = experiment.getEvents(PlantingEvent.class);
 			for (PlantingEvent event : events) {
 				LOG.debug(event.toString());
 			}

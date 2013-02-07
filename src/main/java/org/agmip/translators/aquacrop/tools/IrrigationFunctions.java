@@ -5,15 +5,16 @@ import java.util.Map;
 
 public class IrrigationFunctions {
 
+	// lookup table
 	private Map<String, IrrigationLookupEntry> lookup = new HashMap<String, IrrigationLookupEntry>(); 
 	
-	
-	private class IrrigationLookupEntry {
-		String agmipCode;
-		String description;
-		String units;
-		int aquaCropCode;
-		int soilSurfaceWettedPerc;
+	// lookup entry class
+	public class IrrigationLookupEntry {
+		public String agmipCode;
+		public String description;
+		public String units;
+		public int aquaCropCode;
+		public int soilSurfaceWettedPerc;
 		
 		public IrrigationLookupEntry(String agmipCode, String description, String units, int aquaCropCode, int soilSurfaceWettedPerc) {
 			this.agmipCode = agmipCode;
@@ -41,6 +42,11 @@ public class IrrigationFunctions {
 		// IR011, Constant flood depth, mm, NA	
 	}
 
+	
+	public IrrigationLookupEntry lookUp(String iropCode) {
+		return lookup.get(iropCode);
+	}
+	
 	
 	public int lookUpAquaCropIrrigationCode(String iropCode) {
 		IrrigationLookupEntry entry = lookup.get(iropCode);

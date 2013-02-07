@@ -39,6 +39,17 @@ public class IrrigationEvent extends ManagementEvent {
 	}
 	
 
+	@Override
+	public String toString() {
+		return "IrrigationEvent [iropCode=" + iropCode + ", applicationDepth="
+				+ applicationDepth + ", irrigationMethod=" + irrigationMethod
+				+ ", electricalConductivityOfIrrigationWater="
+				+ electricalConductivityOfIrrigationWater
+				+ ", numberOfDaysAfterSowingOrPlanting="
+				+ numberOfDaysAfterSowingOrPlanting + "]";
+	}
+
+
 	public int getNumberOfDaysAfterSowingOrPlanting() {
 		return numberOfDaysAfterSowingOrPlanting;
 	}

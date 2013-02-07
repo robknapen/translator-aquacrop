@@ -24,14 +24,14 @@ given irrigation schedule
     60        50          1.6
     80        50          1.8
 *#
-$soil.name
+$irrigation.name
     $aquacrop_version : AquaCrop Version
-#hint(${soil.curveNumber}) : CN (Curve Number)
-#hint(${soil.readilyEvaporatedWater}) : Readily evaporable water from top layer (mm)
-#hint(${soil.horizons.size()}) : number of soil horizons
-  -9.00 : Depth (m) of restrictive soil layer inhibiting root zone expansion - None
- Thickness Sat     FC      WP      Ksat     CRa       CRb       Description
- ---(m)--- ------(vol %)-------  (mm/day)  -------------------------------------------------
-#foreach($h in $soil.horizons)
- #dbl2($h.thickness) #vp($h.soilWaterContentAtSaturation) #vp($h.soilWaterContentAtFieldCapacity) #vp($h.soilWaterContentAtPermanentWiltingPoint)  #dbl($h.saturatedHydrolicConductivity)   #dbl6($h.capillaryRiseEstimationParameterA)  #dbl6($h.capillaryRiseEstimationParameterB)  $h.description
+#hint(${irrigation.irrigationMethod}) : ${irrigation.method}
+#hint(${irrigation.percSoilSurfaceWetted}) : Percentage of soil surface wetted by irrigation
+#hint(1) : Irrigation schedule
+
+   Day    Depth (mm)   ECw (dS/m)
+====================================
+#foreach($h in $irrigation.items)
+ #dbl2($h.numberOfDaysAfterSowingOrPlanting) #vp($h.applicationDepth) #dbl($h.electricalConductivityOfIrrigationWater)
 #end

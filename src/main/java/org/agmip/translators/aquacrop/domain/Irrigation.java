@@ -98,10 +98,18 @@ public class Irrigation {
         }
         
         if (irrigationMethod == -1) {
-        	LOG.error("Irrigation method used in experiment is not supported by the AquaCrop model!");
-        	errorCount++;
+        	LOG.info("No irrigation used in experiment.");
         } else {
-        	percSoilSurfaceWetted = new IrrigationFunctions().lookUpAquaCropSoilSurfaceWetted(iropCode);
+        	IrrigationFunctions.IrrigationLookupEntry info = new IrrigationFunctions().lookUp(iropCode);
+        	if (info != null) {
+	        	percSoilSurfaceWetted = info.soilSurfaceWettedPerc;
+	        	method = info.description + " (" + info.units + ")";
+	        	name = info.agmipCode + " : " + method;
+        	} else {
+        		percSoilSurfaceWetted = 100;
+        		method = "Unknow irrigation method";
+        		name = "Udefined : " + method;
+        	}
         }
         
         return (errorCount == 0);
@@ -138,13 +146,13 @@ public class Irrigation {
 	}
 
 
-	public int getIrrigationMode() {
+	public int getIrrigationMethod() {
 		return irrigationMethod;
 	}
 
 
-	public void setIrrigationMode(int irrigationMode) {
-		this.irrigationMethod = irrigationMode;
+	public void setIrrigationMethod(int irrigationMethod) {
+		this.irrigationMethod = irrigationMethod;
 	}
 
 
