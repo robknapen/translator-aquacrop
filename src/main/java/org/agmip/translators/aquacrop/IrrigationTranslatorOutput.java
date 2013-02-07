@@ -40,16 +40,20 @@ public class IrrigationTranslatorOutput extends BaseTranslatorOutput implements 
 		/// process the irrigation management for each experiment
 		for (Experiment experiment : experiments.getItems()) {
 			Irrigation irrigation = experiment.getIrrigation();
-			LOG.debug(irrigation.toString());
-
-			VelocityContext vc = new VelocityContext();
-			vc.put("format", new AquaCropFormatter());
-			vc.put("aquacrop_version", AQUACROP_VERSION);
-			vc.put("irrigation", irrigation);
-			Template t = Velocity.getTemplate("src/main/resources/aquacrop_irrigation_irr.vm", "UTF-8");
-			int pos = file.lastIndexOf(".");
-			String outFile = file.substring(0, pos) + "_" + experiment.getId() + ".irr";
-			writeFile(vc, t, outFile);
+			if (irrigation == null) {
+				LOG.error("No usable input could be generated from experiment: " + experiment);
+			} else {
+				LOG.debug(irrigation.toString());
+	
+				VelocityContext vc = new VelocityContext();
+				vc.put("format", new AquaCropFormatter());
+				vc.put("aquacrop_version", AQUACROP_VERSION);
+				vc.put("irrigation", irrigation);
+				Template t = Velocity.getTemplate("src/main/resources/aquacrop_irrigation_irr.vm", "UTF-8");
+				int pos = file.lastIndexOf(".");
+				String outFile = file.substring(0, pos) + "_" + experiment.getId() + ".irr";
+				writeFile(vc, t, outFile);
+			}
 		}
 		
 		LOG.debug("Done");

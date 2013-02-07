@@ -3,6 +3,8 @@ package org.agmip.translators.aquacrop.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.agmip.translators.aquacrop.tools.DateFunctions;
+import org.agmip.translators.aquacrop.tools.IrrigationFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,46 +23,88 @@ public class Irrigation {
 	private String name;
 	private String method;
 	private double percSoilSurfaceWetted;
-	private int irrigationMode;
+	private String iropCode;
+	private int irrigationMethod;
+	private long startDayNumber;
 
 	private List<IrrigationEvent> items = new ArrayList<IrrigationEvent>();
 	
 	
+	/**
+	 * Creates an instance based on the specified list of events. The
+	 * instance will be returned, or null when the events could not be
+	 * parsed into a valid irrigation instance.
+	 * 
+	 * @param events to use to populate the instance
+	 * @return created instance or null
+	 */
 	public static Irrigation create(List<ManagementEvent> events) {
 		Irrigation obj = new Irrigation();
-		obj.from(events);
-		return obj;
+		if (obj.from(events)) {
+			return obj;
+		} else {
+			return null;
+		}
 	}
 	
 	
-	public void from(List<ManagementEvent> managementEvents) {
-
-		// TODO get the global data
-		LOG.error("Het ging niet goed");
-        
+	public boolean from(List<ManagementEvent> managementEvents) {
         items.clear();
         ManagementEvent startEvent = null;
+        iropCode = null;
+        irrigationMethod = -1;
+        startDayNumber = -1;
+        int errorCount = 0;
         
         for (ManagementEvent event : managementEvents) {
-        	
         	// check for planting / sowing event -> keep date as reference
         	if (event instanceof PlantingEvent) {
+        		if (startEvent != null) {
+        			LOG.error("Multiple planting events within a single experiment can currently not be handled by the translator! Further rotations will be ignored.");
+        			errorCount++;
+        			break;
+        		}
         		startEvent = event;
+        		startDayNumber = DateFunctions.calculateDayNumber(event.getDate(), false); 
         	}
         	
         	// check for irrigation event -> create IrrigationEvent data from it
         	if ((startEvent != null) && (event instanceof IrrigationEvent)) {
-            	// TODO: custom data processing
-            	items.add((IrrigationEvent)event);
+        		IrrigationEvent irrEvent = (IrrigationEvent)event;
+        		if (irrEvent.getIrrigationMethod() == -1) {
+        			LOG.error("Irrigation method used in experiment that is not supported by the AquaCrop model. The irrigation event will be ignored.");
+        			errorCount++;
+        			continue;
+        		}
+        		
+        		if (irrigationMethod == -1) {
+        			irrigationMethod = irrEvent.getIrrigationMethod();
+        			iropCode = irrEvent.getIropCode();
+        		} else if (irrigationMethod != irrEvent.getIrrigationMethod()) {
+        			LOG.error("Different types of irrigation events within a single experiment. This can currently not be handled by the translator! The irrigation event will be ignored.");
+        			errorCount++;
+        			continue;
+        		}
+        		
+        		long dayNr = DateFunctions.calculateDayNumber(irrEvent.getDate(), false);
+        		irrEvent.setNumberOfDaysAfterSowingOrPlanting((int)(dayNr - startDayNumber));
+            	items.add(irrEvent);
         	}
         	
         	// check for harvesting event -> stop processing, rotations not supported (yet)
         	if ((startEvent != null) && (event instanceof HarvestingEvent)) {
-        		break;
+    			LOG.warn("Harvesting event in experiment. In case of crop rotations these will be ignored since the current translator does not handle them.");
         	}
         }
         
-    	// TODO: global custom data processing
+        if (irrigationMethod == -1) {
+        	LOG.error("Irrigation method used in experiment is not supported by the AquaCrop model!");
+        	errorCount++;
+        } else {
+        	percSoilSurfaceWetted = new IrrigationFunctions().lookUpAquaCropSoilSurfaceWetted(iropCode);
+        }
+        
+        return (errorCount == 0);
 	}
 
 
@@ -95,12 +139,12 @@ public class Irrigation {
 
 
 	public int getIrrigationMode() {
-		return irrigationMode;
+		return irrigationMethod;
 	}
 
 
 	public void setIrrigationMode(int irrigationMode) {
-		this.irrigationMode = irrigationMode;
+		this.irrigationMethod = irrigationMode;
 	}
 
 

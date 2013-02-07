@@ -2,13 +2,18 @@ package org.agmip.translators.aquacrop.domain;
 
 import java.util.Map;
 
+import org.agmip.translators.aquacrop.tools.IrrigationFunctions;
+import org.agmip.util.MapUtil;
+
 
 @SuppressWarnings({"rawtypes"})
 public class IrrigationEvent extends ManagementEvent {
 
-	private int numberOfDaysAfterSowingOrPlanting; // int
+	private String iropCode; // AgMIP irop code
 	private int applicationDepth; // mm
+	private int irrigationMethod; // aquacrop code
 	private double electricalConductivityOfIrrigationWater; // dS/m
+	private int numberOfDaysAfterSowingOrPlanting; // int
 	
 	
 	public static IrrigationEvent create(Map data) {
@@ -20,10 +25,17 @@ public class IrrigationEvent extends ManagementEvent {
 	
 	public void from(Map data) {
 		super.from(data);
-		// TODO fill in specific fields
-        // "irop":"IR001", // irrigation operation (code)
-        // "irval":"13", // irrigation amount, depth of water (mm)
-        // "ireff":"1"
+		
+		applicationDepth = Integer.valueOf(MapUtil.getValueOr(data, "irval", "0.0"));
+		
+		iropCode = MapUtil.getValueOr(data, "irop", null);
+		irrigationMethod = new IrrigationFunctions().lookUpAquaCropIrrigationCode(iropCode);
+
+		// currently not available in AgMIP, set to default
+		electricalConductivityOfIrrigationWater = 0.0;
+		
+		// calculated relatively, fill in later 
+		numberOfDaysAfterSowingOrPlanting = -1;
 	}
 	
 
@@ -56,6 +68,26 @@ public class IrrigationEvent extends ManagementEvent {
 	public void setElectricalConductivityOfIrrigationWater(
 			double electricalConductivityOfIrrigationWater) {
 		this.electricalConductivityOfIrrigationWater = electricalConductivityOfIrrigationWater;
+	}
+
+
+	public String getIropCode() {
+		return iropCode;
+	}
+
+
+	public void setIropCode(String iropCode) {
+		this.iropCode = iropCode;
+	}
+
+
+	public int getIrrigationMethod() {
+		return irrigationMethod;
+	}
+
+
+	public void setIrrigationMethod(int irrigationMethod) {
+		this.irrigationMethod = irrigationMethod;
 	}
 	
 }
