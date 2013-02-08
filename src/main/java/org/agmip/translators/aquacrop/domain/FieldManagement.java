@@ -68,8 +68,15 @@ public class FieldManagement {
 	    	// check for fertilization event -> sum total N applied (Kg[N]/Ha)
 			if ((startEvent != null) && (event instanceof FertilizerEvent)) {
 				FertilizerEvent ferEvent = (FertilizerEvent)event;
-				totalNitrogenKgHa += ferEvent.getFertilizerTotalNitrogenKgHa();
-				name = name + "[" + ferEvent.getFertilizerMaterial() + "]";
+				totalNitrogenKgHa += ferEvent.getTotalNitrogenKgHa();
+				name = name + "[" + ferEvent.getMaterialCode() + "]";
+			}
+
+	    	// check for organic matter application event -> sum total N applied (Kg[N]/Ha)
+			if ((startEvent != null) && (event instanceof OrganicMatterEvent)) {
+				OrganicMatterEvent omEvent = (OrganicMatterEvent)event;
+				totalNitrogenKgHa += omEvent.getTotalNitrogenKgHa();
+				name = name + "[" + omEvent.getIdentifyingCode() + "]";
 			}
 			
 	    	// check for irrigation event -> create IrrigationEvent data from it
