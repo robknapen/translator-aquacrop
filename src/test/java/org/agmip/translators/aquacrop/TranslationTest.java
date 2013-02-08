@@ -130,5 +130,25 @@ public class TranslationTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+
+	
+	/**
+	 * Test the translation of field management data
+	 */
+	public void testFieldManagementTranslation() {
+		FieldManagementTranslatorOutput t = new FieldManagementTranslatorOutput();
+
+		try {
+			File tempFile = File.createTempFile("tmp_agmip_aquacrop_management", ".man");
+			t.writeFile(tempFile.getAbsolutePath(), inputMap);
+			
+			// TODO: Add real tests!!!
+			
+			assertTrue(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 	
 }	

@@ -104,6 +104,14 @@ public class FieldManagement {
         
         return (errorCount == 0);
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "FieldManagement [name=" + name + ", totalNitrogenKgHa="
+				+ totalNitrogenKgHa + ", soilFertilityStressPerc="
+				+ soilFertilityStressPerc + "]";
+	}
 
 
 	public String getName() {
@@ -164,6 +172,17 @@ public class FieldManagement {
 
 	public void setSurfaceRunOffPrevented(int surfaceRunOffPrevented) {
 		this.surfaceRunOffPrevented = surfaceRunOffPrevented;
+	}
+
+
+	public double getEffectOfMulchesOnReductionOfSoilEvaporationPerc() {
+		return effectOfMulchesOnReductionOfSoilEvaporationPerc;
+	}
+
+
+	public void setEffectOfMulchesOnReductionOfSoilEvaporationPerc(
+			double effectOfMulchesOnReductionOfSoilEvaporationPerc) {
+		this.effectOfMulchesOnReductionOfSoilEvaporationPerc = effectOfMulchesOnReductionOfSoilEvaporationPerc;
 	}
 	
 }

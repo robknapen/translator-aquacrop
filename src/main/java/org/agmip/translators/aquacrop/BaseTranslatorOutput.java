@@ -33,6 +33,10 @@ public class BaseTranslatorOutput {
 		public String headerInt(int val) {
 			return String.format("%7s", String.valueOf(val));
 		}
+
+		public String headerDbl(double val, int decimals) {
+			return dbl(val, 7, decimals);
+		}
 		
 		public String num(int val, int size) {
 			String frm = String.format("%%%d", size);
