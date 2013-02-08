@@ -91,7 +91,7 @@ public class FieldManagement {
 		}
     	
         if (totalNitrogenKgHa <= 0) {
-        	LOG.info("No fetilization used in experiment.");
+        	LOG.info("No fertilization used in experiment.");
         	name = name + "No fertilizer applied";
         }
         

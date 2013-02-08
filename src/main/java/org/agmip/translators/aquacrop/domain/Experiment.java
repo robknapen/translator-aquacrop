@@ -108,6 +108,9 @@ public class Experiment {
 		if (AgMIPFunctions.MANAGEMENT_EVENT_IRRIGATE.equalsIgnoreCase(event)) {
 			return IrrigationEvent.create(data);
 		}
+		if (AgMIPFunctions.MANAGEMENT_EVENT_FERTILIZE.equalsIgnoreCase(event)) {
+			return FertilizerEvent.create(data);
+		}
 		if (AgMIPFunctions.MANAGEMENT_EVENT_HARVEST.equalsIgnoreCase(event)) {
 			return HarvestingEvent.create(data);
 		}
