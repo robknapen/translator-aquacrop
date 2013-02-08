@@ -1,0 +1,21 @@
+##
+## AquaCrop Field Management Data - Main File
+##
+#macro(hint $val)${format.headerInt($val)}#end
+#macro(hdbl0 $val)${format.headerDbl($val,0)}#end
+#macro(hdbl1 $val)${format.headerDbl($val,1)}#end
+#macro(hdbl2 $val)${format.headerDbl($val,2)}#end
+#macro(vp $val)${format.dbl($val,6,1)}#end
+#macro(int $val)${format.num($val,8)}#end
+#macro(dbl $val)${format.dbl($val,8,1)}#end
+#macro(dbl0 $val)${format.dbl($val,8,0)}#end
+#macro(dbl2 $val)${format.dbl($val,8,2)}#end
+#macro(dbl6 $val)${format.dbl($val,8,6)}#end
+##
+$management.name
+    $aquacrop_version : AquaCrop Version
+#hdbl0(${management.groundSurfaceCoveredByMulchesPerc}) : percentage (%) of ground surface covered by mulches IN growing period
+#hdbl0(${management.effectOfMulchesOnReductionOfSoilEvaporationPerc}) : effect (%) of mulches on reduction of soil evaporation
+#hdbl0(${management.soilFertilityStressPerc}) : Non-limiting soil fertility
+#hdbl2(${management.soilBundsHeightM}) : height (m) of soil bunds
+#hint(${management.surfaceRunOffPrevented}) : surface runoff NOT prevented by field surface practices
