@@ -14,10 +14,11 @@ public class ManagementEvent {
 	private int[] dayMonthYear;
 
 	
-	public void from(Map data) {
+	public boolean from(Map data) {
 		event = AgMIPFunctions.getValueFor(data, "Unknown", "event");
-		date = AgMIPFunctions.getValueFor(data, "190101", "date");
+		date = AgMIPFunctions.getValueFor(data, "19000101", "date");
 		dayMonthYear = DateFunctions.decodeDateString(date);
+		return true;
 	}
 	
 	

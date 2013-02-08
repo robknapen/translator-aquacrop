@@ -10,43 +10,52 @@ import org.agmip.util.MapUtil;
 public class IrrigationEvent extends ManagementEvent {
 
 	private String iropCode; // AgMIP irop code
-	private double applicationDepth; // mm
+	private double applicationDepthMM; // mm
 	private int irrigationMethod; // aquacrop code
 	private double electricalConductivityOfIrrigationWater; // dS/m
 	private int numberOfDaysAfterSowingOrPlanting; // int
+	private double bundHeightMM; // abund, mm
 	
 	
 	public static IrrigationEvent create(Map data) {
 		IrrigationEvent obj = new IrrigationEvent();
-		obj.from(data);
-		return obj;
+		if (obj.from(data)) {
+			return obj;
+		}
+		return null;
 	}
 	
 	
-	public void from(Map data) {
-		super.from(data);
+	public boolean from(Map data) {
+		if (!super.from(data)) {
+			return false;
+		}
 		
-		applicationDepth = Double.valueOf(MapUtil.getValueOr(data, "irval", "0.0"));
+		applicationDepthMM = Double.valueOf(MapUtil.getValueOr(data, "irval", "0.0"));
+		bundHeightMM = Double.valueOf(MapUtil.getValueOr(data, "abund", "0.0"));
 		
 		iropCode = MapUtil.getValueOr(data, "irop", "");
 		irrigationMethod = new IrrigationFunctions().lookUpAquaCropIrrigationCode(iropCode);
-
+		
 		// currently not available in AgMIP, set to default
 		electricalConductivityOfIrrigationWater = 0.0;
 		
 		// calculated relatively, fill in later 
 		numberOfDaysAfterSowingOrPlanting = -1;
+		
+		return true;
 	}
-	
+
 
 	@Override
 	public String toString() {
 		return "IrrigationEvent [iropCode=" + iropCode + ", applicationDepth="
-				+ applicationDepth + ", irrigationMethod=" + irrigationMethod
+				+ applicationDepthMM + ", irrigationMethod=" + irrigationMethod
 				+ ", electricalConductivityOfIrrigationWater="
 				+ electricalConductivityOfIrrigationWater
 				+ ", numberOfDaysAfterSowingOrPlanting="
-				+ numberOfDaysAfterSowingOrPlanting + "]";
+				+ numberOfDaysAfterSowingOrPlanting + ", bundHeight="
+				+ bundHeightMM + "]";
 	}
 
 
@@ -61,13 +70,13 @@ public class IrrigationEvent extends ManagementEvent {
 	}
 
 
-	public double getApplicationDepth() {
-		return applicationDepth;
+	public double getApplicationDepthMM() {
+		return applicationDepthMM;
 	}
 
 
-	public void setApplicationDepth(double applicationDepth) {
-		this.applicationDepth = applicationDepth;
+	public void setApplicationDepthMM(double applicationDepthMM) {
+		this.applicationDepthMM = applicationDepthMM;
 	}
 
 
@@ -99,6 +108,16 @@ public class IrrigationEvent extends ManagementEvent {
 
 	public void setIrrigationMethod(int irrigationMethod) {
 		this.irrigationMethod = irrigationMethod;
+	}
+
+
+	public double getBundHeightMM() {
+		return bundHeightMM;
+	}
+
+
+	public void setBundHeightMM(double bundHeightMM) {
+		this.bundHeightMM = bundHeightMM;
 	}
 	
 }

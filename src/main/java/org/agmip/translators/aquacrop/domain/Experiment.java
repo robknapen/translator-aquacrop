@@ -1,6 +1,8 @@
 package org.agmip.translators.aquacrop.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +67,21 @@ public class Experiment {
 	        	events.add(event);
         	}
         }
+
+        // events are not necessarily sorted by date, so fix it
+        Collections.sort(events, new SortEventByDate());
 	}
 
+
+	/**
+	 * Sort comparator for sorting the management events by date.
+	 */
+	public class SortEventByDate implements Comparator<ManagementEvent> {
+		public int compare(ManagementEvent e1, ManagementEvent e2) {
+			return e1.getDate().compareTo(e2.getDate());
+		}
+	}
+	
 	
 	@Override
 	public String toString() {

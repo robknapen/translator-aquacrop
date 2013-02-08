@@ -15,16 +15,22 @@ public class PlantingEvent extends ManagementEvent {
 	
 	public static PlantingEvent create(Map data) {
 		PlantingEvent obj = new PlantingEvent();
-		obj.from(data);
-		return obj;
+		if (obj.from(data)) {
+			return obj;
+		}
+		return null;
 	}
 
 	
-	public void from(Map data) {
-		super.from(data);
+	public boolean from(Map data) {
+		if (!super.from(data)) {
+			return false;
+		}
 		cropId = MapUtil.getValueOr(data, "crid", "Undefined");
 		aquaCropCultivarId = MapUtil.getValueOr(data, "aquaCrop_cul_id", "Undefined");
 		cultivarName = MapUtil.getValueOr(data, "cul_name", "Undefined");
+		
+		return true;
 	}
 
 

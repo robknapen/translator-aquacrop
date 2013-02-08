@@ -7,14 +7,20 @@ public class HarvestingEvent extends ManagementEvent {
 
 	public static HarvestingEvent create(Map data) {
 		HarvestingEvent obj = new HarvestingEvent();
-		obj.from(data);
-		return obj;
+		if (obj.from(data)) {
+			return obj;
+		}
+		return null;
 	}
 	
 	
-	public void from(Map data) {
-		super.from(data);
+	public boolean from(Map data) {
+		if (!super.from(data)) {
+			return false;
+		}
+		
 		// TODO: fill custom fields
+		return true;
 	}
 	
 }
