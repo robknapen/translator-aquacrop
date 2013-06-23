@@ -1,17 +1,14 @@
 package org.agmip.translators.aquacrop.tools;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
-import org.agmip.util.MapUtil;
+import org.agmip.ace.AceRecord;
 
 /**
  * Generic support functions for the mapping of AgMIP to AquaCrop data.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings({"rawtypes", "unchecked"}) 
 public class AgMIPFunctions {
 
 	// AgMIP data bucket names
@@ -42,10 +39,11 @@ public class AgMIPFunctions {
 	 * @param data to examine
 	 * @param keys to test
 	 * @return true if a value is available for at least one of the keys
+	 * @throws IOException 
 	 */
-	public static boolean hasValueFor(Map data, String... keys) {
+	public static boolean hasValueFor(AceRecord data, String... keys) throws IOException {
 		for (String key : keys) {
-			if (!"".equals(MapUtil.getValueOr(data, key, ""))) {
+			if (!"".equals(data.getValueOr(key, ""))) {
 				return true;
 			}
 		}
@@ -60,8 +58,9 @@ public class AgMIPFunctions {
 	 * @param data to examine
 	 * @param keys to search
 	 * @return value for first available key, or null
+	 * @throws IOException 
 	 */
-	public static String getValueOrNullFor(Map data, String... keys) {
+	public static String getValueOrNullFor(AceRecord data, String... keys) throws IOException {
 		return getValueFor(data, null, keys);
 	}
 	
@@ -74,11 +73,12 @@ public class AgMIPFunctions {
 	 * @param orValue to return when no key is available
 	 * @param keys to search
 	 * @return value for first available key, or the orValue
+	 * @throws IOException 
 	 */
-	public static String getValueFor(Map data, String orValue, String... keys) {
+	public static String getValueFor(AceRecord data, String orValue, String... keys) throws IOException {
 		String val;
 		for (String key : keys) {
-			val = MapUtil.getValueOr(data, key, "");
+			val = data.getValueOr(key, "");
 			if (!"".equals(val)) {
 				return val;
 			}
@@ -95,9 +95,9 @@ public class AgMIPFunctions {
 	 * @param key to search
 	 * @return value for the key, or an empty list
 	 */
-	public static ArrayList<HashMap<String, Object>> getListOrEmptyFor(Map data, String key) {
-	    return (ArrayList<HashMap<String, Object>>) MapUtil.getObjectOr(data, key, new ArrayList<HashMap<String, Object>>());        
-	}
+//	public static ArrayList<HashMap<String, Object>> getListOrEmptyFor(Map data, String key) {
+//	    return (ArrayList<HashMap<String, Object>>) MapUtil.getObjectOr(data, key, new ArrayList<HashMap<String, Object>>());        
+//	}
 	
 	
 }

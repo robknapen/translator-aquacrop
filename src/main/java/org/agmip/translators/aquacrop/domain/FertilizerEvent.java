@@ -1,11 +1,10 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
-import org.agmip.util.MapUtil;
+import org.agmip.ace.AceEvent;
 
 
-@SuppressWarnings({"rawtypes"})
 public class FertilizerEvent extends ManagementEvent {
 
 	private String applicationMethod; 	// feacd - fertilizer application method (code)
@@ -14,27 +13,27 @@ public class FertilizerEvent extends ManagementEvent {
 	private double totalNitrogenKgHa;	// feamn + feno3 + fenh4 (kg[N]/ha)
 
 	
-	public static FertilizerEvent create(Map data) {
+	public static FertilizerEvent create(AceEvent aceEvent) throws IOException {
 		FertilizerEvent obj = new FertilizerEvent();
-		if (obj.from(data)) {
+		if (obj.from(aceEvent)) {
 			return obj;
 		}
 		return null;
 	}
 	
 	
-	public boolean from(Map data) {
-		if (!super.from(data)) {
+	public boolean from(AceEvent aceEvent) throws IOException {
+		if (!super.from(aceEvent)) {
 			return false;
 		}
 		
-		applicationMethod = MapUtil.getValueOr(data, "feacd", "Undefined");
-		materialCode = MapUtil.getValueOr(data, "fecd", "Undefined");
-		applicationDepthCm = Double.valueOf(MapUtil.getValueOr(data, "fedep", "0.0"));
+		applicationMethod = aceEvent.getValueOr("feacd", "Undefined");
+		materialCode = aceEvent.getValueOr("fecd", "Undefined");
+		applicationDepthCm = Double.valueOf(aceEvent.getValueOr("fedep", "0.0"));
 
-		double feamn = Double.valueOf(MapUtil.getValueOr(data, "feamn", "0.0"));
-		double feno3 = Double.valueOf(MapUtil.getValueOr(data, "feno3", "0.0"));
-		double fenh4 = Double.valueOf(MapUtil.getValueOr(data, "fenh4", "0.0"));
+		double feamn = Double.valueOf(aceEvent.getValueOr("feamn", "0.0"));
+		double feno3 = Double.valueOf(aceEvent.getValueOr("feno3", "0.0"));
+		double fenh4 = Double.valueOf(aceEvent.getValueOr("fenh4", "0.0"));
 
 		totalNitrogenKgHa = feamn + feno3 + fenh4;
 		

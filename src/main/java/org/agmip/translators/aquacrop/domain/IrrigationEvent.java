@@ -1,12 +1,11 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
+import org.agmip.ace.AceEvent;
 import org.agmip.translators.aquacrop.tools.IrrigationFunctions;
-import org.agmip.util.MapUtil;
 
 
-@SuppressWarnings({"rawtypes"})
 public class IrrigationEvent extends ManagementEvent {
 
 	private String iropCode; // AgMIP irop code
@@ -17,24 +16,26 @@ public class IrrigationEvent extends ManagementEvent {
 	private double bundHeightMM; // abund, mm
 	
 	
-	public static IrrigationEvent create(Map data) {
+	public static IrrigationEvent create(AceEvent aceEvent) throws IOException {
 		IrrigationEvent obj = new IrrigationEvent();
-		if (obj.from(data)) {
+		if (obj.from(aceEvent)) {
 			return obj;
 		}
 		return null;
 	}
 	
 	
-	public boolean from(Map data) {
-		if (!super.from(data)) {
+	public boolean from(AceEvent aceEvent) throws IOException {
+		if (!super.from(aceEvent)) {
 			return false;
 		}
 		
-		applicationDepthMM = Double.valueOf(MapUtil.getValueOr(data, "irval", "0.0"));
-		bundHeightMM = Double.valueOf(MapUtil.getValueOr(data, "abund", "0.0"));
+		applicationDepthMM = Double.valueOf(aceEvent.getValueOr("irval", "0.0"));
+		bundHeightMM = Double.valueOf(aceEvent.getValueOr("abund", "0.0"));
 		
-		iropCode = MapUtil.getValueOr(data, "irop", "");
+		iropCode = aceEvent.getValueOr("irop", "");
+		
+		// TODO: Use AceLookup for this
 		irrigationMethod = new IrrigationFunctions().lookUpAquaCropIrrigationCode(iropCode);
 		
 		// currently not available in AgMIP, set to default

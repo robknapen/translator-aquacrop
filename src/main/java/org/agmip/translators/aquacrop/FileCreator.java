@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,18 +19,23 @@ import org.slf4j.LoggerFactory;
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  * @author Dirk Raes, Leuven University, Belgium
  */
-public class BaseTranslatorOutput {
+public class FileCreator {
 
 	// logger for this translator
-    private static final Logger LOG = LoggerFactory.getLogger(BaseTranslatorOutput.class);
+    public static final Logger LOG = LoggerFactory.getLogger(FileCreator.class);
 	
 	public final static String AQUACROP_VERSION = "4.0";
 	
+	
+	public FileCreator() {
+		Velocity.init();
+	}
 
+	
 	/**
 	 * Formatting methods for used with Velocity.
 	 */
-	public class AquaCropFormatter {
+	public static class AquaCropFormatter {
 		public String headerInt(int val) {
 			return String.format("%7s", String.valueOf(val));
 		}
@@ -50,7 +56,7 @@ public class BaseTranslatorOutput {
 	}
 
 	
-	protected void writeFile(VelocityContext context, Template template, String file) {
+	protected static void writeFile(VelocityContext context, Template template, String file) {
 		try {
             FileOutputStream fstream = new FileOutputStream(file);
             DataOutputStream out = new DataOutputStream(fstream);

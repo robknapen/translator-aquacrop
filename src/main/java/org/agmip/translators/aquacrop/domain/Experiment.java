@@ -1,21 +1,22 @@
 package org.agmip.translators.aquacrop.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.agmip.ace.AceEvent;
+import org.agmip.ace.AceEventCollection;
+import org.agmip.ace.AceExperiment;
 import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
-import org.agmip.util.MapUtil;
 
 /**
  * Data for a single AgMIP crop experiment.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings("rawtypes")
 public class Experiment {
 
 	private String name; // exname
@@ -33,43 +34,36 @@ public class Experiment {
 	protected List<ManagementEvent> events = new ArrayList<ManagementEvent>();
 
 	
-	public static Experiment create(Map data) {
+	public static Experiment create(AceExperiment aceExperiment) throws IOException {
 		Experiment instance = new Experiment();
-		instance.from(data);
+		instance.from(aceExperiment);
 		return instance;
 	}
 	
 	
-	@SuppressWarnings("unchecked")
-	public void from(Map data) {
-		name = MapUtil.getValueOr(data, "exname", "Unnamed");
-		fieldName = MapUtil.getValueOr(data, "fl_name", "Unnamed");
-		
-        fieldLatitude = Double.valueOf(MapUtil.getValueOr(data, "fl_lat", "0.0"));
-        fieldLongitude = Double.valueOf(MapUtil.getValueOr(data, "fl_long", "0.0"));
-		
-        institution = MapUtil.getValueOr(data, "institution", "Undefined");
-        personNotes = MapUtil.getValueOr(data, "pr_notes", "");
-        tillageNotes = MapUtil.getValueOr(data, "ti_notes", "");
-        fertilizerNotes = MapUtil.getValueOr(data, "fe_notes", "");
-        treatmentNotes = MapUtil.getValueOr(data, "tr_notes", "");
-        fieldNotes = MapUtil.getValueOr(data, "fl_notes", "");
+	public void from(AceExperiment aceExperiment) throws IOException {
+		name = aceExperiment.getValueOr("exname", "Unnamed");
+		fieldName = aceExperiment.getValueOr("fl_name", "Unnamed");
+        fieldLatitude = Double.valueOf(aceExperiment.getValueOr("fl_lat", "0.0"));
+        fieldLongitude = Double.valueOf(aceExperiment.getValueOr("fl_long", "0.0"));
+        institution = aceExperiment.getValueOr("institution", "Undefined");
+        personNotes = aceExperiment.getValueOr("pr_notes", "");
+        tillageNotes = aceExperiment.getValueOr("ti_notes", "");
+        fertilizerNotes = aceExperiment.getValueOr("fe_notes", "");
+        treatmentNotes = aceExperiment.getValueOr("tr_notes", "");
+        fieldNotes = aceExperiment.getValueOr("fl_notes", "");
         
-		// get the bucket of relevant data
-		Map<String, Object> bucket = MapUtil.getRawBucket(data, AgMIPFunctions.MANAGEMENT_BUCKET_NAME);
-        assert(bucket != null);
-
-        // extract the management events
+		// Example: AceEventCollection aceIrrigationEvents = ((AceExperiment) data).getEvents().filterByEvent(AceEventType.ACE_IRRIGATION_EVENT).sort();
+        
+        // get all management events, sorted
+        AceEventCollection aceEvents = aceExperiment.getEvents().sort();
         events.clear();
-        for (HashMap<String, Object> eventData : AgMIPFunctions.getListOrEmptyFor(bucket, AgMIPFunctions.MANAGEMENT_EVENTS_LIST_NAME)) {
-        	ManagementEvent event = createEvent(eventData);
+        for (AceEvent aceEvent : aceEvents) {
+        	ManagementEvent event = createEvent(aceEvent);
         	if (event != null) {
 	        	events.add(event);
         	}
         }
-
-        // events are not necessarily sorted by date, so fix it
-        Collections.sort(events, new SortEventByDate());
 	}
 
 
@@ -100,22 +94,22 @@ public class Experiment {
 	}
 
 
-	public ManagementEvent createEvent(Map data) {
-		String event = AgMIPFunctions.getValueFor(data, "Unknown", "event");
+	public ManagementEvent createEvent(AceEvent aceEvent) throws IOException {
+		String event = aceEvent.getValueOr("event", "Unknown");
 		if (AgMIPFunctions.MANAGEMENT_EVENT_PLANT.equalsIgnoreCase(event)) {
-			return PlantingEvent.create(data);
+			return PlantingEvent.create(aceEvent);
 		}
 		if (AgMIPFunctions.MANAGEMENT_EVENT_IRRIGATE.equalsIgnoreCase(event)) {
-			return IrrigationEvent.create(data);
+			return IrrigationEvent.create(aceEvent);
 		}
 		if (AgMIPFunctions.MANAGEMENT_EVENT_FERTILIZE.equalsIgnoreCase(event)) {
-			return FertilizerEvent.create(data);
+			return FertilizerEvent.create(aceEvent);
 		}
 		if (AgMIPFunctions.MANAGEMENT_EVENT_ORGANIC.equalsIgnoreCase(event)) {
-			return OrganicMatterEvent.create(data);
+			return OrganicMatterEvent.create(aceEvent);
 		}
 		if (AgMIPFunctions.MANAGEMENT_EVENT_HARVEST.equalsIgnoreCase(event)) {
-			return HarvestingEvent.create(data);
+			return HarvestingEvent.create(aceEvent);
 		}
 		return null;
 	}

@@ -1,7 +1,10 @@
 package org.agmip.translators.aquacrop.tools;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import org.agmip.ace.AceComponent;
 
 /**
  * Support functions for the mapping of AgMIP to AquaCrop data, related to
@@ -48,6 +51,19 @@ public class DateFunctions {
 		_calendar.set(Calendar.DAY_OF_MONTH, day);
 		
 		return _calendar.get(Calendar.DAY_OF_YEAR);
+	}
+	
+	
+	public static long calculateDayNumberFromAceData(AceComponent data, String variableName, String defaultDate, boolean checked) {
+		try {
+	        String aceDate = (String) data.getValueOr(variableName, defaultDate);
+	        if ((aceDate == null) || (aceDate.length() != 8)) {
+				throw new IllegalArgumentException("Date variable " + variableName + " not found and no default date specified");
+	        }
+			return calculateDayNumber(aceDate, checked);
+		} catch (IOException e) {
+			throw new IllegalArgumentException("Error reading variable " + variableName + " form ACE object " + data + ". Exception: " + e.getMessage());
+		}
 	}
 	
 	

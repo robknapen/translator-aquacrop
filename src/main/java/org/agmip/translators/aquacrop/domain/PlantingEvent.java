@@ -1,11 +1,10 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
-import org.agmip.util.MapUtil;
+import org.agmip.ace.AceEvent;
 
 
-@SuppressWarnings("rawtypes")
 public class PlantingEvent extends ManagementEvent {
 
 	private String cropId; // crid
@@ -13,22 +12,22 @@ public class PlantingEvent extends ManagementEvent {
 	private String aquaCropCultivarId; // aquacrop_cul_id
 	
 	
-	public static PlantingEvent create(Map data) {
+	public static PlantingEvent create(AceEvent aceEvent) throws IOException {
 		PlantingEvent obj = new PlantingEvent();
-		if (obj.from(data)) {
+		if (obj.from(aceEvent)) {
 			return obj;
 		}
 		return null;
 	}
 
 	
-	public boolean from(Map data) {
-		if (!super.from(data)) {
+	public boolean from(AceEvent aceEvent) throws IOException {
+		if (!super.from(aceEvent)) {
 			return false;
 		}
-		cropId = MapUtil.getValueOr(data, "crid", "Undefined");
-		aquaCropCultivarId = MapUtil.getValueOr(data, "aquaCrop_cul_id", "Undefined");
-		cultivarName = MapUtil.getValueOr(data, "cul_name", "Undefined");
+		cropId = aceEvent.getValueOr("crid", "Undefined");
+		aquaCropCultivarId = aceEvent.getValueOr("aquaCrop_cul_id", "Undefined");
+		cultivarName = aceEvent.getValueOr("cul_name", "Undefined");
 		
 		return true;
 	}

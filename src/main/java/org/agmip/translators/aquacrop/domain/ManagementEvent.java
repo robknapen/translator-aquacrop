@@ -1,12 +1,11 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
+import org.agmip.ace.AceEvent;
 import org.agmip.translators.aquacrop.tools.DateFunctions;
-import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 
 
-@SuppressWarnings({"rawtypes"})
 public class ManagementEvent {
 
 	private String event;
@@ -14,9 +13,9 @@ public class ManagementEvent {
 	private int[] dayMonthYear;
 
 	
-	public boolean from(Map data) {
-		event = AgMIPFunctions.getValueFor(data, "Unknown", "event");
-		date = AgMIPFunctions.getValueFor(data, "19000101", "date");
+	public boolean from(AceEvent aceEvent) throws IOException {
+		event = aceEvent.getValueOr("event", "Unknown");
+		date = aceEvent.getValueOr("date", "19010101");
 		dayMonthYear = DateFunctions.decodeDateString(date);
 		return true;
 	}

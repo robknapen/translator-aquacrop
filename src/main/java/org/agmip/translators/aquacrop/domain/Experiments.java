@@ -1,43 +1,36 @@
 package org.agmip.translators.aquacrop.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
-import org.agmip.util.MapUtil;
+import org.agmip.ace.AceDataset;
+import org.agmip.ace.AceExperiment;
 
 /**
  * Data for a series of AgMIP crop experiments.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings("rawtypes")
 public class Experiments {
 
 	private List<Experiment> items = new ArrayList<Experiment>();
 	
 	
-	public static Experiments create(Map data) {
+	public static Experiments create(AceDataset aceDataset) throws IOException {
 		Experiments instance = new Experiments();
-		instance.from(data);
+		instance.from(aceDataset);
 		return instance;
 	}
 
 	
-	@SuppressWarnings("unchecked")
-	public void from(Map data) {
-		// get the bucket of relevant data
-		ArrayList<HashMap<String, Object>> dataItems = MapUtil.getRawPackageContents(data, AgMIPFunctions.EXPERIMENTS_BUCKET_NAME);
-        assert(dataItems != null);
+	public void from(AceDataset aceDataset) throws IOException {
+		List<AceExperiment> aceExperiments = aceDataset.getExperiments();
+        assert((aceExperiments != null) && (!aceExperiments.isEmpty()));
 
         items.clear();
-        for (HashMap<String, Object> dataItem : dataItems) {
-        	// create a new item
-        	Experiment experiment = Experiment.create(dataItem);
-        	// store it
-        	items.add(experiment);
+        for (AceExperiment ae : aceExperiments) {
+        	items.add(Experiment.create(ae));
         }
 	}
 	

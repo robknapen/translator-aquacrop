@@ -1,7 +1,8 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
+import org.agmip.ace.AceRecord;
 import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
 import org.agmip.translators.aquacrop.tools.SoilFunctions;
 
@@ -10,7 +11,6 @@ import org.agmip.translators.aquacrop.tools.SoilFunctions;
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings({"rawtypes"}) 
 public class SoilLayer {
 
 	// extracted data
@@ -27,21 +27,21 @@ public class SoilLayer {
 	private String description;
 	
 	
-	public static SoilLayer create(Map data) {
+	public static SoilLayer create(AceRecord aceSoilLayer) throws IOException {
 		SoilLayer sh = new SoilLayer();
-		sh.from(data);
+		sh.from(aceSoilLayer);
 		return sh;
 	}
 	
 	
-	public void from(Map data) {
+	public void from(AceRecord aceSoilLayer) throws IOException {
 		// extract AgMIP info
-		String sllbVal	= AgMIPFunctions.getValueFor(data, "10.0", "sllb"); // cm (default 10.0)
-		String sltxVal  = AgMIPFunctions.getValueFor(data, "SA", "sltx"); // code (default sand)
-		String slsatVal = AgMIPFunctions.getValueFor(data, "0.0", "slsat"); // cm3/cm3  (default 0.0)
-		String wpVal    = AgMIPFunctions.getValueOrNullFor(data, "slwp", "slll"); // cm3/cm3
-		String fcVal    = AgMIPFunctions.getValueOrNullFor(data, "slfc1", "sldul"); // cm3/cm3
-		String ksatVal	= AgMIPFunctions.getValueOrNullFor(data, "sksat"); // cm/h
+		String sllbVal	= AgMIPFunctions.getValueFor(aceSoilLayer, "10.0", "sllb"); // cm (default 10.0)
+		String sltxVal  = AgMIPFunctions.getValueFor(aceSoilLayer, "SA", "sltx"); // code (default sand)
+		String slsatVal = AgMIPFunctions.getValueFor(aceSoilLayer, "0.0", "slsat"); // cm3/cm3  (default 0.0)
+		String wpVal    = AgMIPFunctions.getValueOrNullFor(aceSoilLayer, "slwp", "slll"); // cm3/cm3
+		String fcVal    = AgMIPFunctions.getValueOrNullFor(aceSoilLayer, "slfc1", "sldul"); // cm3/cm3
+		String ksatVal	= AgMIPFunctions.getValueOrNullFor(aceSoilLayer, "sksat"); // cm/h
 		
 		// fill in structure and convert units
 		baseDepth = Double.valueOf(sllbVal) / 100; // cm -> m

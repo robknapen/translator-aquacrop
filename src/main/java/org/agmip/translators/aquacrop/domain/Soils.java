@@ -1,40 +1,34 @@
 package org.agmip.translators.aquacrop.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
-import org.agmip.util.MapUtil;
+import org.agmip.ace.AceDataset;
+import org.agmip.ace.AceSoil;
 
 /**
  * Data for a collection of AgMIP soils, to be used for model input.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings("rawtypes")
 public class Soils {
 
 	private List<Soil> items = new ArrayList<Soil>();
 	
-	public static Soils create(Map data) {
+	public static Soils create(AceDataset aceDataset) throws IOException {
 		Soils instance = new Soils();
-		instance.from(data);
+		instance.from(aceDataset);
 		return instance;
 	}
 
 	
-	@SuppressWarnings("unchecked")
-	private void from(Map data) {
-		// get the bucket of relevant data
-		ArrayList<HashMap<String, Object>> dataItems = MapUtil.getRawPackageContents(data, AgMIPFunctions.SOILS_BUCKET_NAME);
-        assert(dataItems != null);
-
+	private void from(AceDataset aceDataset) throws IOException {
+		List<AceSoil> aceSoils = aceDataset.getSoils();
+        assert((aceSoils != null) && (!aceSoils.isEmpty()));
         items.clear();
-        for (HashMap<String, Object> dataItem : dataItems) {
-        	Soil soil = Soil.create(dataItem);
-        	items.add(soil);
+        for (AceSoil as : aceSoils) {
+        	items.add(Soil.create(as));
         }
 	}
 

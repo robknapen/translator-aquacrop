@@ -1,20 +1,19 @@
 package org.agmip.translators.aquacrop.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
+import org.agmip.ace.AceRecord;
+import org.agmip.ace.AceRecordCollection;
+import org.agmip.ace.AceSoil;
 import org.agmip.translators.aquacrop.tools.SoilFunctions;
-import org.agmip.util.MapUtil;
 
 /**
  * Soil data relevant for AquaCrop, extracted from AgMIP data.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings({"rawtypes"})
 public class Soil {
 
 	private String id;
@@ -27,28 +26,28 @@ public class Soil {
 	private List<SoilLayer> layers = new ArrayList<SoilLayer>();
 
 	
-	public static Soil create(Map data) {
+	public static Soil create(AceSoil aceSoil) throws IOException {
 		Soil s = new Soil();
-		s.from(data);
+		s.from(aceSoil);
 		return s;
 	}
 	
 	
-	public void from(Map data) {
+	public void from(AceSoil aceSoil) throws IOException {
         // get the global soil data
-        id = MapUtil.getValueOr(data, "soil_id", "Unknown");
-        name = MapUtil.getValueOr(data, "soil_name", "Unknown");
-        latitude = Double.valueOf(MapUtil.getValueOr(data, "soil_lat", "0.0"));
-        longitude = Double.valueOf(MapUtil.getValueOr(data, "soil_long", "0.0"));
-        classification = MapUtil.getValueOr(data, "classification", "Unknown");
-        curveNumber = Integer.valueOf(MapUtil.getValueOr(data, "slro", "0"));
-
+		id = aceSoil.getId();
+		name = aceSoil.getValueOr("soil_name", "Unknown");
+		latitude = Double.valueOf(aceSoil.getValueOr("soil_lat", "0.0"));
+		longitude = Double.valueOf(aceSoil.getValueOr("soil_long", "0.0"));
+		classification = aceSoil.getValueOr("classification", "Unknown");
+		curveNumber = Integer.valueOf(aceSoil.getValueOr("slro", "0"));
+		
         // extract the soil layers
         layers.clear();
         double previousSoilLayerBaseDepth = 0.0;
-        for (HashMap<String, Object> soilLayerData : AgMIPFunctions.getListOrEmptyFor(data, AgMIPFunctions.SOILS_LAYERS_LIST_NAME)) {
-        	// create a new item
-        	SoilLayer item = SoilLayer.create(soilLayerData);
+        AceRecordCollection aceSoilLayers = aceSoil.getSoilLayers();
+        for (AceRecord aceSoilLayer : aceSoilLayers) {
+        	SoilLayer item = SoilLayer.create(aceSoilLayer);
         	
         	// fill in derived data
         	item.setThickness(item.getSoilLayerBaseDepth() - previousSoilLayerBaseDepth);

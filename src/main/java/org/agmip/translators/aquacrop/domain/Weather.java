@@ -1,21 +1,19 @@
 package org.agmip.translators.aquacrop.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.DateFunctions;
-import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
+import org.agmip.ace.AceRecord;
+import org.agmip.ace.AceRecordCollection;
+import org.agmip.ace.AceWeather;
 import org.agmip.translators.aquacrop.tools.WeatherFunctions;
-import org.agmip.util.MapUtil;
 
 /**
  * Weather data relevant for AquaCrop, extracted from AgMIP data.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings({"rawtypes"}) 
 public class Weather {
 
 	private String name;
@@ -27,38 +25,38 @@ public class Weather {
 	private List<DailyWeather> daily = new ArrayList<DailyWeather>();
 	
 	
-	public static Weather create(Map data) {
+	public static Weather create(AceWeather aceWeather) throws IOException {
 		Weather w = new Weather();
-		w.from(data);
+		w.from(aceWeather);
 		return w;
 	}
 	
 	
-	public void from(Map data) {
-        // get the global weather station data
-        name = MapUtil.getValueOr(data, "wst_name", "Unknown");
-        weatherStationId = MapUtil.getValueOr(data, "wst_id", "Unknown");
-        latitude = Double.valueOf(MapUtil.getValueOr(data, "wst_lat", "0.0"));
-        longitude = Double.valueOf(MapUtil.getValueOr(data, "wst_long", "0.0"));
-        elevation = Double.valueOf(MapUtil.getValueOr(data, "elev", "0.0"));
+	public void from(AceWeather aceWeather) throws IOException {
+
+		// get the global weather station data
+		name = aceWeather.getValueOr("wst_name", "Unknown");
+        weatherStationId = aceWeather.getValueOr("wst_id", "Unknown");
+        latitude = Double.valueOf(aceWeather.getValueOr("wst_lat", "0.0"));
+        longitude = Double.valueOf(aceWeather.getValueOr("wst_long", "0.0"));
+        elevation = Double.valueOf(aceWeather.getValueOr("elev", "0.0"));
         
-        // get the daily weather station data
-        List<HashMap<String, Object>> dataItems = AgMIPFunctions.getListOrEmptyFor(data, AgMIPFunctions.WEATHERS_DAILY_LIST_NAME);
-        assert(dataItems.size() > 0);
-        firstDate = (String) MapUtil.getValueOr(dataItems.get(0), "w_date", "19010101");
-            
-        daily.clear();
-        for (Map<String, Object> dataItem : dataItems) {
-        	// create a new item
-        	DailyWeather item = DailyWeather.create(dataItem);
-        	
+        // TODO: get daily ET0
+        // HashMap<String, ArrayList<String>> dailyEt0 = WeatherHelper.getEto((HashMap)data);
+
+        // get the daily weather station data, should be chronologically sorted
+        AceRecordCollection aceDailyWeathers = aceWeather.getDailyWeather();
+        assert(aceDailyWeathers.size() > 0);
+        
+        for (AceRecord aceDailyWeather : aceDailyWeathers) {
+        	DailyWeather item = DailyWeather.create(aceDailyWeather);
         	// fill in derived data
-			int day = DateFunctions.calculateDayInYear(item.getDate(), false);
-			item.setET0(WeatherFunctions.calculateETReference(day, latitude, elevation, item.getMaxTemp(), item.getMinTemp()));
-			
+			item.setET0(WeatherFunctions.calculateETReference(item.getDayNumber(), latitude, elevation, item.getMaxTemp(), item.getMinTemp()));
 			// store it
         	daily.add(item);
         }
+        
+        firstDate = daily.get(0).getDate();
 	}
 
 

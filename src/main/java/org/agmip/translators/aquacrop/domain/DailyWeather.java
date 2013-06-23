@@ -1,18 +1,18 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
+import org.agmip.ace.AceRecord;
 import org.agmip.translators.aquacrop.tools.DateFunctions;
-import org.agmip.util.MapUtil;
 
 /**
  * Daily weather data relevant for AquaCrop, extracted from AgMIP data.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings({"rawtypes"}) 
 public class DailyWeather {
 
+	// ace data
 	private String date;
 	private int[] dayMonthYear;
 	private double minTemp;
@@ -20,21 +20,24 @@ public class DailyWeather {
 	private double rain;
 	private double ET0;
 	
+	// derived data
+	private long dayNumber;
 	
-	public static DailyWeather create(Map data) {
+	
+	public static DailyWeather create(AceRecord aceDailyWeather) throws IOException {
 		DailyWeather dw = new DailyWeather();
-		dw.from(data);
+		dw.from(aceDailyWeather);
 		return dw;
 	}
 
 	
-	public void from(Map data) {
-		date = MapUtil.getValueOr(data, "w_date", "19010101");
+	public void from(AceRecord aceDailyWeather) throws IOException {
+		setDate(aceDailyWeather.getValueOr("w_date", "19010101"));
 		dayMonthYear = DateFunctions.decodeDateString(date);
-        minTemp = Double.valueOf(MapUtil.getValueOr(data, "tmin", "12.0"));
-        maxTemp = Double.valueOf(MapUtil.getValueOr(data, "tmax", "28.0"));
-        rain = Double.valueOf(MapUtil.getValueOr(data, "rain", "0.0"));
-        ET0 = Double.valueOf(MapUtil.getValueOr(data, "evap", "5.0"));
+        minTemp = Double.valueOf(aceDailyWeather.getValueOr("tmin", "12.0"));
+        maxTemp = Double.valueOf(aceDailyWeather.getValueOr("tmax", "28.0"));
+        rain = Double.valueOf(aceDailyWeather.getValueOr("rain", "0.0"));
+        ET0 = Double.valueOf(aceDailyWeather.getValueOr("evap", "5.0"));
 	}
 
 
@@ -45,8 +48,19 @@ public class DailyWeather {
 
 	public void setDate(String date) {
 		this.date = date;
+		this.dayNumber = DateFunctions.calculateDayInYear(this.date, false);
 	}
 	
+
+	public long getDayNumber() {
+		return dayNumber;
+	}
+
+
+	public void setDayNumber(long dayNumber) {
+		this.dayNumber = dayNumber;
+	}
+
 
 	public int[] getDayMonthYear() {
 		return dayMonthYear;

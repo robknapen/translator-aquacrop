@@ -18,7 +18,7 @@ public class WeatherFunctions {
 	 * @param tMin Minimum air temperature (degrees C)
 	 * @return ET reference
 	 */
-	public static double calculateETReference(int day, double latDeg, double altitudeZ, double tMax, double tMin) {
+	public static double calculateETReference(long day, double latDeg, double altitudeZ, double tMax, double tMin) {
 		double pAtm = Math.exp(Math.log(101.3) + 5.26 * Math.log((293 - 0.0065 * altitudeZ) / 293));
 		double psyConst = pAtm * 0.664742 / 1000;
 		double tMean = (tMax + tMin) / 2;
@@ -40,7 +40,7 @@ public class WeatherFunctions {
 		double etRef = (0.408 * delta * rN + psyConst * (900 / (tMean + 273)) * u2 * (es - ea)) / (delta + psyConst * (1 + 0.34 * u2));
 		return etRef;
 	}
-	
+
 	
 	/**
 	 * Calculate extra terrestrial radiation.
@@ -49,7 +49,7 @@ public class WeatherFunctions {
 	 * @param latDeg latitude in decimal degrees (+ for Northern hemisphere, - for Southern hemisphere)
 	 * @return calculated extra terrestrial radiation (Ra)
 	 */
-	public static double calculateExtraTerrestrialRadiation(int day, double latDeg) {
+	public static double calculateExtraTerrestrialRadiation(long day, double latDeg) {
 		double latRad = Math.PI * latDeg/180;
 		double dr = 1 + 0.033 * Math.cos(day * 2 * Math.PI / 365);
 		double delta = 0.409 * Math.sin(day * 2 * Math.PI / 365 - 1.39);

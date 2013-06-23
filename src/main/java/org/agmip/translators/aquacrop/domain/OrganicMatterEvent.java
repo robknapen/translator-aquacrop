@@ -1,10 +1,9 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
-import org.agmip.util.MapUtil;
+import org.agmip.ace.AceEvent;
 
-@SuppressWarnings({"rawtypes"})
 public class OrganicMatterEvent extends ManagementEvent {
 
 	private String applicationMethod; 	// omacd - organic material, application method (code)
@@ -13,26 +12,26 @@ public class OrganicMatterEvent extends ManagementEvent {
 	private double totalNitrogenKgHa;	// omamt * omn% (kg[N]/ha)
 
 	
-	public static OrganicMatterEvent create(Map data) {
+	public static OrganicMatterEvent create(AceEvent aceEvent) throws IOException {
 		OrganicMatterEvent obj = new OrganicMatterEvent();
-		if (obj.from(data)) {
+		if (obj.from(aceEvent)) {
 			return obj;
 		}
 		return null;
 	}
 	
 	
-	public boolean from(Map data) {
-		if (!super.from(data)) {
+	public boolean from(AceEvent aceEvent) throws IOException {
+		if (!super.from(aceEvent)) {
 			return false;
 		}
 		
-		applicationMethod = MapUtil.getValueOr(data, "omacd", "Undefined");
-		identifyingCode = MapUtil.getValueOr(data, "omcd", "Undefined");
-		applicationDepthCm = Double.valueOf(MapUtil.getValueOr(data, "omdep", "0.0"));
+		applicationMethod = aceEvent.getValueOr("omacd", "Undefined");
+		identifyingCode = aceEvent.getValueOr("omcd", "Undefined");
+		applicationDepthCm = Double.valueOf(aceEvent.getValueOr("omdep", "0.0"));
 
-		double omamt = Double.valueOf(MapUtil.getValueOr(data, "omamt", "0.0"));
-		double omnperc = Double.valueOf(MapUtil.getValueOr(data, "omn%", "0.0"));
+		double omamt = Double.valueOf(aceEvent.getValueOr("omamt", "0.0"));
+		double omnperc = Double.valueOf(aceEvent.getValueOr("omn%", "0.0"));
 
 		totalNitrogenKgHa = omamt * omnperc / 100.0;
 		

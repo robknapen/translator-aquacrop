@@ -1,40 +1,36 @@
 package org.agmip.translators.aquacrop.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.agmip.translators.aquacrop.tools.AgMIPFunctions;
-import org.agmip.util.MapUtil;
+import org.agmip.ace.AceDataset;
+import org.agmip.ace.AceWeather;
 
 /**
  * Data for a collection of AgMIP weathers, to be used for model input.
  * 
  * @author Rob Knapen, Alterra Wageningen UR, The Netherlands
  */
-@SuppressWarnings("rawtypes")
 public class Weathers {
 
 	private List<Weather> items = new ArrayList<Weather>();
 	
 	
-	public static Weathers create(Map data) {
+	public static Weathers create(AceDataset aceDataset) throws IOException {
 		Weathers instance = new Weathers();
-		instance.from(data);
+		instance.from(aceDataset);
 		return instance;
 	}
 	
 	
-	@SuppressWarnings("unchecked")
-	public void from(Map data) {
-		ArrayList<HashMap<String, Object>> dataItems = MapUtil.getRawPackageContents(data, AgMIPFunctions.WEATHERS_BUCKET_NAME);
-        assert(dataItems != null);
+	public void from(AceDataset aceDataset) throws IOException {
+		List<AceWeather> aceWeathers = aceDataset.getWeathers();
+        assert((aceWeathers != null) && (!aceWeathers.isEmpty()));
 
         items.clear();
-        for (HashMap<String, Object> dataItem : dataItems) {
-        	Weather weather = Weather.create(dataItem);
-        	items.add(weather);
+        for (AceWeather aw : aceWeathers) {
+        	items.add(Weather.create(aw));
         }
 	}
 

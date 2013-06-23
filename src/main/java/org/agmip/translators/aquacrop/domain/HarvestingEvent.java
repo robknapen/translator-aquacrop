@@ -1,21 +1,22 @@
 package org.agmip.translators.aquacrop.domain;
 
-import java.util.Map;
+import java.io.IOException;
 
-@SuppressWarnings("rawtypes")
+import org.agmip.ace.AceEvent;
+
 public class HarvestingEvent extends ManagementEvent {
 
-	public static HarvestingEvent create(Map data) {
+	public static HarvestingEvent create(AceEvent aceEvent) throws IOException {
 		HarvestingEvent obj = new HarvestingEvent();
-		if (obj.from(data)) {
+		if (obj.from(aceEvent)) {
 			return obj;
 		}
 		return null;
 	}
 	
 	
-	public boolean from(Map data) {
-		if (!super.from(data)) {
+	public boolean from(AceEvent aceEvent) throws IOException {
+		if (!super.from(aceEvent)) {
 			return false;
 		}
 		
